@@ -143,18 +143,37 @@
             align-items: center;
         }
 
+        .teams-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .team-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-badge-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
         .team-name {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .match-score {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 700;
             background: var(--lavender);
             color: var(--brand-purple);
-            padding: 6px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
+            text-align: center;
         }
 
         /* Tabelle e Classifiche */
@@ -186,6 +205,12 @@
         td {
             padding: 12px 14px;
             border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-team-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .badge-index {
@@ -239,16 +264,12 @@
             font-weight: 700;
         }
 
-        /* Sezione Altro e Impostazioni */
         .settings-card {
             background: var(--card-bg);
             border-radius: 16px;
             padding: 16px;
             border: 1px solid var(--border-color);
             margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
     </style>
 </head>
@@ -275,7 +296,7 @@
                 <input type="text" id="searchInput" placeholder="Cerca squadre, campionati o partite..." oninput="filterMatches()">
             </div>
 
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">🎯 Report Pronostici & Match del Giorno</h2>
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">🎯 Report Pronostici & Match</h2>
             <div id="matchesContainer">
                 <p style="color: var(--text-muted); text-align: center; padding: 40px;">Caricamento dati dal database Excel in corso...</p>
             </div>
@@ -285,7 +306,7 @@
         <div id="tab-favorites" class="section-view">
             <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⭐ Squadre & Campionati Preferiti</h2>
             <div class="settings-card">
-                <p style="color: var(--text-muted);">Tocca la stellina accanto alle partite per aggiungerle ai tuoi preferiti.</p>
+                <p style="color: var(--text-muted);">Seleziona le tue squadre preferite per tenerle sempre sott'occhio.</p>
             </div>
         </div>
 
@@ -324,16 +345,12 @@
         <div id="tab-more" class="section-view">
             <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⚙️ Altro & Info</h2>
             <div class="settings-card">
-                <div>
-                    <strong>Metis Index</strong>
-                    <p style="font-size: 13px; color: var(--text-muted);">Indicatore proprietario basato su forma, attacco e difesa.</p>
-                </div>
+                <strong>Metis Index</strong>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Indicatore proprietario basato su forma, attacco e difesa.</p>
             </div>
             <div class="settings-card">
-                <div>
-                    <strong>Versione Piattaforma</strong>
-                    <p style="font-size: 13px; color: var(--text-muted);">Metis Engine v2.5 Cloud</p>
-                </div>
+                <strong>Piattaforma</strong>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Metis Engine v2.5 Cloud 24/7</p>
             </div>
         </div>
 
@@ -361,7 +378,37 @@
     <script>
         let globalData = {};
 
-        // Funzione per cambiare tab con la barra inferiore
+        // Funzione per generare un logo o stemma basato sul nome della squadra
+        function getTeamLogoUrl(teamName) {
+            if (!teamName) return 'https://crests.football-data.org/default.svg';
+            // Esempio di mapping pulito per loghi ufficiali da CDN sportive pubbliche
+            const cleanName = teamName.trim().toLowerCase();
+            
+            // Mappa rapida di fallback o ID noti (puoi estenderla facilmente)
+            const mapping = {
+                'milan': 'https://crests.football-data.org/98.svg',
+                'inter': 'https://crests.football-data.org/108.svg',
+                'juventus': 'https://crests.football-data.org/109.svg',
+                'napoli': 'https://crests.football-data.org/113.svg',
+                'roma': 'https://crests.football-data.org/100.svg',
+                'lazio': 'https://crests.football-data.org/110.svg',
+                'atalanta': 'https://crests.football-data.org/102.svg',
+                'real madrid': 'https://crests.football-data.org/86.svg',
+                'barcelona': 'https://crests.football-data.org/81.svg',
+                'atletico madrid': 'https://crests.football-data.org/78.svg',
+                'manchester city': 'https://crests.football-data.org/65.svg',
+                'arsenal': 'https://crests.football-data.org/57.svg',
+                'liverpool': 'https://crests.football-data.org/64.svg'
+            };
+
+            if (mapping[cleanName]) {
+                return mapping[cleanName];
+            }
+
+            // Fallback generico con le iniziali o stemma neutro
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(teamName)}&background=EAE4F5&color=8066B8&bold=true&size=64`;
+        }
+
         function switchTab(tabId, element) {
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
@@ -370,7 +417,6 @@
             if(element) element.classList.add('active');
         }
 
-        // Caricamento dati reali dal server Express che legge l'Excel
         async function fetchDatabase() {
             try {
                 const response = await fetch('/api/data');
@@ -384,18 +430,22 @@
             }
         }
 
-        // Popola la Home con i report e le partite estratte dal file Excel
         function renderHomeMatches() {
             const container = document.getElementById('matchesContainer');
             container.innerHTML = '';
 
             const reports = globalData['Report'] || [];
             if (reports.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color: var(--text-muted);">Nessun match trovato nel database Excel. Esegui il master engine per popolare i dati.</p>`;
+                container.innerHTML = `<p style="text-align:center; color: var(--text-muted);">Nessun match trovato nel database Excel.</p>`;
                 return;
             }
 
             reports.forEach(match => {
+                // Estrae le due squadre dal testo del match (es. "Milan - Inter")
+                const matchParts = match.Match ? match.Match.split(/vs|-/) : ['Squadra Casa', 'Squadra Trasferta'];
+                const homeTeam = matchParts[0] ? matchParts[0].trim() : 'Casa';
+                const awayTeam = matchParts[1] ? matchParts[1].trim() : 'Ospiti';
+
                 container.innerHTML += `
                     <div class="match-card">
                         <div class="match-header">
@@ -403,20 +453,26 @@
                             <span class="highlight">Esito: ${match['Esito / Chi Vince'] || 'N/D'}</span>
                         </div>
                         <div class="match-body">
-                            <div>
-                                <div class="team-name">${match.Match || 'Squadra A vs Squadra B'}</div>
-                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-                                    Index: ${match['Metis Index Casa']} vs ${match['Metis Index Trasf']}
+                            <div class="teams-container">
+                                <div class="team-row">
+                                    <img src="${getTeamLogoUrl(homeTeam)}" class="team-badge-img" alt="${homeTeam}">
+                                    <span class="team-name">${homeTeam}</span>
+                                </div>
+                                <div class="team-row">
+                                    <img src="${getTeamLogoUrl(awayTeam)}" class="team-badge-img" alt="${awayTeam}">
+                                    <span class="team-name">${awayTeam}</span>
                                 </div>
                             </div>
-                            <div class="match-score">O/U 2.5: ${match['Over/Under 2.5'] || '-'}</div>
+                            <div class="match-score">
+                                <div style="font-size: 11px; color: var(--text-muted); font-weight: normal;">Over 2.5</div>
+                                ${match['Over/Under 2.5'] || '-'}
+                            </div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Popola il selettore dei campionati per le classifiche
         function populateLeaguesDropdown() {
             const selector = document.getElementById('leagueSelector');
             selector.innerHTML = '';
@@ -431,7 +487,6 @@
             renderStandings();
         }
 
-        // Renderizza la tabella classifiche in base al campionato selezionato
         function renderStandings() {
             const league = document.getElementById('leagueSelector').value;
             const tbody = document.querySelector('#standingsTable tbody');
@@ -444,7 +499,12 @@
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${row.Posizione}</b></td>
-                        <td>${row.Squadra}</td>
+                        <td>
+                            <div class="table-team-cell">
+                                <img src="${getTeamLogoUrl(row.Squadra)}" class="team-badge-img" alt="${row.Squadra}">
+                                <b>${row.Squadra}</b>
+                            </div>
+                        </td>
                         <td><b>${row.Punti}</b></td>
                         <td>${row.Giocate}</td>
                         <td><span class="badge-index">${row['Metis Index'] || '-'}</span></td>
@@ -453,7 +513,6 @@
             });
         }
 
-        // Funzione di ricerca istantanea
         function filterMatches() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.match-card');
@@ -464,7 +523,6 @@
             });
         }
 
-        // Avvio caricamento dati all'apertura
         fetchDatabase();
     </script>
 </body>
