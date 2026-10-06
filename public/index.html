@@ -126,6 +126,13 @@ const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>
 const num=v=>{const n=parseFloat(String(v??'').replace('%','').replace(',','.'));return isNaN(n)?null:n};
 const ln=c=>String(c).replace(/\s*\d{4}$/,''),nm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const lsg=k=>{try{return localStorage.getItem(k)}catch{return null}},lss=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+/* ===== CONFIGURAZIONE DATI =====
+   GITHUB_RAW: link "raw" del tuo Excel su GitHub (repo pubblico), es.
+   'https://raw.githubusercontent.com/TUO-UTENTE/TUO-REPO/main/data/metis_database.xlsx'
+   Se lo compili, l'app legge i dati direttamente da GitHub (si aggiornano dopo ogni push,
+   senza aspettare il deploy di Vercel). Lascialo vuoto per usare solo i file del sito. */
+const GITHUB_RAW='';
+const SOURCES=[GITHUB_RAW,'metis_database.xlsx','data/metis_database.xlsx','/metis_database.xlsx','/data/metis_database.xlsx'].filter(Boolean);
 const PRI=['Serie A','Premier League','La Liga','Bundesliga','Ligue 1','Serie B','Championship','Eredivisie Olanda','Liga Portugal'];
 const S={tab:'home',date:null,q:'',sq:'t',ft:'t',fav:new Set(JSON.parse(lsg('metis.fav')||'[]')),ov:null,pop:null,theme:lsg('metis.theme')||'auto',err:false,upd:null};
 let M=[],MI=new Map(),ST=new Map(),CL={},CLT=new Map(),H2=new Map(),LG=[],SEASON='';
@@ -160,11 +167,14 @@ const TABS=[['home','Home'],['fav','Preferiti'],['games','Partite'],['leagues','
 async function load(file){
  try{
   let buf;
-  if(file)buf=await file.arrayBuffer();else{const r=await fetch('metis_database.xlsx?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;buf=await r.arrayBuffer()}
+  if(file)buf=await file.arrayBuffer();else{
+   let r=null;
+   for(const u of SOURCES){try{const x=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(x.ok&&!/text\/html/.test(x.headers.get('content-type')||'')){r=x;break}}catch{}}
+   if(!r)throw 0;buf=await r.arrayBuffer()}
   const wb=XLSX.read(buf,{type:'array'}),sh=n=>wb.Sheets[n]?XLSX.utils.sheet_to_json(wb.Sheets[n],{defval:''}):[];
   const rd=wb.Sheets.README?XLSX.utils.sheet_to_json(wb.Sheets.README,{header:1}):[];SEASON=(rd[1]&&rd[1][1])||'';
   const R=new Map(sh('Report').map(r=>[r.Campionato+'|'+r.Match,r]));
-  M=sh('Fixtures').map((f,i)=>({i,id:f.Data+'|'+f.Casa+'|'+f.Trasferta,d:String(f.Data),c:f.Campionato,h:f.Casa,a:f.Trasferta,r:R.get(f.Campionato+'|'+f.Casa+' vs '+f.Trasferta)||{}}));
+  M=sh('Fixtures').map((f,i)=>({i,id:f.Data+'|'+f.Casa+'|'+f.Trasferta,d:String(f.Data),t:String(f.Ora||'').slice(0,5),c:f.Campionato,h:f.Casa,a:f.Trasferta,r:R.get(f.Campionato+'|'+f.Casa+' vs '+f.Trasferta)||{}}));
   MI=new Map(sh('MetisIndex').map(r=>[r.Squadra,r]));
   ST=new Map(sh('StatisticheSquadra').map(r=>[r.Squadra+'|'+r.Campionato,r]));
   CL={};CLT=new Map();sh('Classifiche').forEach(r=>{(CL[r.Campionato]??=[]).push(r);CLT.set(r.Squadra+'|'+r.Campionato,r)});
@@ -191,7 +201,7 @@ const empty=(t,b)=>`<div class="empty"><svg viewBox="0 0 100 130"><use href="#ow
 
 function card(m,L=true){
  const p=probs(m),f=fav(m),tf=S.fav.has('t:'+m.h)||S.fav.has('t:'+m.a);
- return `<article class="mc" data-act="open" data-i="${m.i}"><div class="mh"><span>${L?esc(ln(m.c)):''}${tf?'<em>Squadra seguita</em>':''}</div>
+ return `<article class="mc" data-act="open" data-i="${m.i}"><div class="mh"><span>${L?esc(ln(m.c)):''}${tf?'<em>Squadra seguita</em>':''}</span>${m.t?`<span style="color:var(--vd);font-weight:800">${esc(m.t)}</span>`:''}</div>
  <div class="mt"><div class="tm">${bd(m.h)}<b class="${f=='h'?'w':''}">${esc(m.h)}</b></div><div class="vs">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="tm r"><b class="${f=='a'?'w':''}">${esc(m.a)}</b>${bd(m.a)}</div></div>
  ${p?`<div class="pb"><i style="width:${p[0]}%" class="${f=='h'?'w':''}"></i><i style="width:${p[1]}%" class="${f=='a'?'w':''}"></i></div>`:''}
  <div class="mf" style="display:flex;justify-content:space-between;align-items:center"><span>${f?`Favorita: <span class="w">${esc(f=='h'?m.h:m.a)}</span>`:'Match equilibrato'}</span>${star('m:'+m.id)}</div></article>`}
@@ -242,7 +252,7 @@ function vOv(){
   (o.tab=='g'?(ds.map(d=>`<div class="dh">${dfmt(d)}</div>`+ms.filter(m=>m.d==d).sort((a,b)=>power(b)-power(a)).map(m=>card(m,false)).join('')).join('')||empty('Nessuna partita in programma.'))
   :`<div class="card"><table><tr><th>#</th><th style="text-align:left">Squadra</th><th>Pt</th><th>G</th><th>DR</th><th>Metis${q('index')}</th></tr>${(CL[c]||[]).map(r=>`<tr><td class="p">${r.Posizione}</td><td class="t">${esc(r.Squadra)}</td><td class="p">${r.Punti}</td><td>${r.Giocate}</td><td>${r['Diff Reti']}</td><td><span class="mi">${(MI.get(r.Squadra)||{})['Metis Index']??'–'}</span></td></tr>`).join('')}</table></div>`);}
  const m=M[o.i],p=probs(m),f=fav(m),r=m.r,A=MI.get(m.h)||{},B=MI.get(m.a)||{};
- let b=`<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(m.c))}<div style="font-size:11px;color:var(--mu);font-weight:600;text-transform:capitalize">${dfmt(m.d)}</div></h1>${star('m:'+m.id)}</div>
+ let b=`<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(m.c))}<div style="font-size:11px;color:var(--mu);font-weight:600;text-transform:capitalize">${dfmt(m.d)}${m.t?', ore '+esc(m.t):''}</div></h1>${star('m:'+m.id)}</div>
  <div class="hero"><div class="ht"><div class="t">${bd(m.h)}<span class="${f=='h'?'w':''}">${esc(m.h)}</span>${star('t:'+m.h)}</div><div class="big">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="t">${bd(m.a)}<span class="${f=='a'?'w':''}">${esc(m.a)}</span>${star('t:'+m.a)}</div></div>
  <p style="color:var(--mu);font-size:12.5px">${f?`<b class="w">${esc(f=='h'?m.h:m.a)}</b> è favorita secondo il Metis Index`:'Per il Metis Index il match è equilibrato'}${q('index')}</p></div>
  <div class="seg">${[['p','Panoramica'],['s','Statistiche'],['h','H2H']].map(([a,l])=>`<button class="${o.tab==a?'on':''}" data-act="ovt" data-v="${a}">${l}</button>`).join('')}</div>`;
