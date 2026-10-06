@@ -3,89 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metis Engine | Football Analytics Dashboard</title>
+    <title>METIS — More than just stats</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #090d16;
-            --card-bg: #131b2e;
-            --border-color: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.15);
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --bg-color: #F8F6E8;
+            --brand-purple: #8066B8;
+            --lavender: #EAE4F5;
+            --text-main: #202024;
+            --text-muted: #6b6b76;
+            --accent-orange: #FF8A3D;
+            --card-bg: #FFFFFF;
+            --border-color: #e2dec9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
-            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 30px 20px;
+            padding-bottom: 90px;
         }
 
-        .container {
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
+        /* Header Principale */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .logo-area h1 {
-            font-size: 26px;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .logo-area p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .status-badge {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        /* Navigazione a Tab */
-        .tabs {
+        .brand-area {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            align-items: center;
+            gap: 12px;
         }
 
-        .tab-btn {
-            background: var(--card-bg);
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--brand-purple);
+        }
+
+        .brand-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--brand-purple);
+            letter-spacing: 0.5px;
+        }
+
+        .brand-title p {
+            font-size: 11px;
             color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .tab-btn.active, .tab-btn:hover {
-            background: var(--accent);
-            color: #090d16;
-            border-color: var(--accent);
+        /* Contenuto */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .section-view {
@@ -96,357 +81,391 @@
             display: block;
         }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 1024px) {
-            .grid-layout { grid-template-columns: 1fr; }
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            margin-bottom: 25px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Barra di Ricerca */
+        .search-box {
+            position: relative;
             margin-bottom: 20px;
         }
 
-        .card-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        select {
-            background: var(--bg-color);
-            color: var(--text-main);
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 14px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 15px;
             outline: none;
-            cursor: pointer;
+            transition: all 0.2s;
         }
 
+        .search-box input:focus {
+            border-color: var(--brand-purple);
+            box-shadow: 0 0 0 3px rgba(128, 102, 184, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-purple);
+            font-size: 18px;
+        }
+
+        /* Schede Partite */
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(128, 102, 184, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .match-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .match-score {
+            font-size: 18px;
+            font-weight: 700;
+            background: var(--lavender);
+            color: var(--brand-purple);
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        /* Tabelle e Classifiche */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         th {
-            background-color: rgba(30, 41, 59, 0.5);
-            color: var(--text-muted);
-            font-weight: 600;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-color);
+            background: var(--lavender);
+            color: var(--brand-purple);
+            padding: 12px 14px;
+            font-size: 12px;
             text-transform: uppercase;
-            font-size: 11px;
+            font-weight: 700;
         }
 
         td {
-            padding: 12px 10px;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--border-color);
-            color: var(--text-main);
-            white-space: nowrap;
         }
 
-        tr:hover td {
-            background-color: var(--accent-glow);
-        }
-
-        .metis-badge {
-            background: linear-gradient(135deg, #0284c7, #38bdf8);
+        .badge-index {
+            background: var(--brand-purple);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
             font-weight: 700;
-            font-size: 12px;
         }
 
-        .prediction-win { color: var(--success); font-weight: 600; }
-        .prediction-over { color: var(--accent); font-weight: 500; }
+        .highlight {
+            color: var(--accent-orange);
+            font-weight: 700;
+        }
+
+        /* Bottom Navigation (Barra Mobile) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item span {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: var(--brand-purple);
+            font-weight: 700;
+        }
+
+        /* Sezione Altro e Impostazioni */
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-area">
+            <img src="logo.png" alt="Metis Logo" class="brand-logo" onerror="this.style.display='none'">
+            <div class="brand-title">
+                <h1>METIS</h1>
+                <p>More than just stats</p>
+            </div>
+        </div>
+        <div id="connection-status" style="font-size: 12px; color: #22c55e; font-weight: 600;">● Online</div>
+    </header>
+
     <div class="container">
-        <header>
-            <div class="logo-area">
-                <h1>⚡ Metis Analytics Engine</h1>
-                <p>Professional Football Statistical Engine & Prediction Hub</p>
+        
+        <!-- HOME: PARTITE & PREDICTION HUB -->
+        <div id="tab-home" class="section-view active">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Cerca squadre, campionati o partite..." oninput="filterMatches()">
             </div>
-            <div class="status-badge">● Engine Online</div>
-        </header>
 
-        <!-- Menu di Navigazione -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('dashboard')">🏆 Panoramica & Metis Index</button>
-            <button class="tab-btn" onclick="switchTab('standings')">📊 Classifiche</button>
-            <button class="tab-btn" onclick="switchTab('reports')">🎯 Report Pronostici & Value Bet</button>
-        </div>
-
-        <!-- TAB 1: PANORAMICA -->
-        <div id="tab-dashboard" class="section-view active">
-            <div class="grid-layout">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>🏆 Top Metis Index (Rendimento 0-100)</h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="miTable">
-                            <thead>
-                                <tr>
-                                    <th>Squadra</th>
-                                    <th>Metis Index</th>
-                                    <th>Forma</th>
-                                    <th>Attacco</th>
-                                    <th>Difesa</th>
-                                    <th>Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2>📊 Anteprima Classifiche</h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="previewStandingsTable">
-                            <thead>
-                                <tr>
-                                    <th>Pos</th>
-                                    <th>Squadra</th>
-                                    <th>Pt</th>
-                                    <th>G</th>
-                                    <th>GF</th>
-                                    <th>GS</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">🎯 Report Pronostici & Match del Giorno</h2>
+            <div id="matchesContainer">
+                <p style="color: var(--text-muted); text-align: center; padding: 40px;">Caricamento dati dal database Excel in corso...</p>
             </div>
         </div>
 
-        <!-- TAB 2: CLASSIFICHE COMPLETE -->
+        <!-- PREFERITI -->
+        <div id="tab-favorites" class="section-view">
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⭐ Squadre & Campionati Preferiti</h2>
+            <div class="settings-card">
+                <p style="color: var(--text-muted);">Tocca la stellina accanto alle partite per aggiungerle ai tuoi preferiti.</p>
+            </div>
+        </div>
+
+        <!-- FISSATE -->
+        <div id="tab-pinned" class="section-view">
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">📌 Partite Fissate</h2>
+            <div id="pinnedContainer">
+                <p style="color: var(--text-muted);">Nessuna partita fissata al momento.</p>
+            </div>
+        </div>
+
+        <!-- CLASSIFICHE -->
         <div id="tab-standings" class="section-view">
-            <div class="card">
-                <div class="card-header">
-                    <h2>📊 Classifiche Complete per Campionato</h2>
-                    <select id="leagueSelect" onchange="renderStandings()"></select>
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">📊 Classifiche & Metis Index</h2>
+            <div style="margin-bottom: 15px;">
+                <select id="leagueSelector" onchange="renderStandings()" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--card-bg); font-weight: 600; color: var(--text-main);">
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table id="standingsTable">
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Squadra</th>
+                            <th>Pt</th>
+                            <th>G</th>
+                            <th>Metis Index</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ALTRO -->
+        <div id="tab-more" class="section-view">
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⚙️ Altro & Info</h2>
+            <div class="settings-card">
+                <div>
+                    <strong>Metis Index</strong>
+                    <p style="font-size: 13px; color: var(--text-muted);">Indicatore proprietario basato su forma, attacco e difesa.</p>
                 </div>
-                <div class="table-responsive">
-                    <table id="standingsTable">
-                        <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th>Squadra</th>
-                                <th>Pt</th>
-                                <th>G</th>
-                                <th>V</th>
-                                <th>N</th>
-                                <th>P</th>
-                                <th>GF</th>
-                                <th>GS</th>
-                                <th>DR</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            </div>
+            <div class="settings-card">
+                <div>
+                    <strong>Versione Piattaforma</strong>
+                    <p style="font-size: 13px; color: var(--text-muted);">Metis Engine v2.5 Cloud</p>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: REPORT PRONOSTICI -->
-        <div id="tab-reports" class="section-view">
-            <div class="card">
-                <div class="card-header">
-                    <h2>🎯 Report Predittivo & Analisi Match</h2>
-                    <select id="reportLeagueSelect" onchange="renderReports()"></select>
-                </div>
-                <div class="table-responsive">
-                    <table id="reportTable">
-                        <thead>
-                            <tr>
-                                <th>Match</th>
-                                <th>Pos (C / T)</th>
-                                <th>Index (C / T)</th>
-                                <th>Esito / Chi Vince</th>
-                                <th>Over 1.5</th>
-                                <th>Over 2.5</th>
-                                <th>BTTS (Goal/Goal)</th>
-                                <th>Clean Sheet</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home', this)">
+            <span>🏠</span>Home
+        </button>
+        <button class="nav-item" onclick="switchTab('favorites', this)">
+            <span>⭐</span>Preferiti
+        </button>
+        <button class="nav-item" onclick="switchTab('pinned', this)">
+            <span>📌</span>Fissate
+        </button>
+        <button class="nav-item" onclick="switchTab('standings', this)">
+            <span>📊</span>Campionati
+        </button>
+        <button class="nav-item" onclick="switchTab('more', this)">
+            <span>⚙️</span>Altro
+        </button>
+    </nav>
+
     <script>
-        let dbData = {};
+        let globalData = {};
 
-        async function loadData() {
+        // Funzione per cambiare tab con la barra inferiore
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(element) element.classList.add('active');
+        }
+
+        // Caricamento dati reali dal server Express che legge l'Excel
+        async function fetchDatabase() {
             try {
-                const res = await fetch('/api/data');
-                dbData = await res.json();
-                renderMetisIndex();
-                renderLeaguesDropdown();
-                renderReportsDropdown();
-                renderPreviewStandings();
-            } catch (err) {
-                console.error("Errore nel caricamento dati:", err);
+                const response = await fetch('/api/data');
+                globalData = await response.json();
+                
+                renderHomeMatches();
+                populateLeaguesDropdown();
+            } catch (error) {
+                console.error("Errore nel recupero dati:", error);
+                document.getElementById('matchesContainer').innerHTML = `<p style="text-align:center; color: #ef4444;">Impossibile caricare i dati dal database Excel.</p>`;
             }
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+        // Popola la Home con i report e le partite estratte dal file Excel
+        function renderHomeMatches() {
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = '';
+
+            const reports = globalData['Report'] || [];
+            if (reports.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color: var(--text-muted);">Nessun match trovato nel database Excel. Esegui il master engine per popolare i dati.</p>`;
+                return;
+            }
+
+            reports.forEach(match => {
+                container.innerHTML += `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <span>🏆 ${match.Campionato || 'Campionato'}</span>
+                            <span class="highlight">Esito: ${match['Esito / Chi Vince'] || 'N/D'}</span>
+                        </div>
+                        <div class="match-body">
+                            <div>
+                                <div class="team-name">${match.Match || 'Squadra A vs Squadra B'}</div>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                                    Index: ${match['Metis Index Casa']} vs ${match['Metis Index Trasf']}
+                                </div>
+                            </div>
+                            <div class="match-score">O/U 2.5: ${match['Over/Under 2.5'] || '-'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Popola il selettore dei campionati per le classifiche
+        function populateLeaguesDropdown() {
+            const selector = document.getElementById('leagueSelector');
+            selector.innerHTML = '';
             
-            if (tabName === 'dashboard') {
-                document.querySelector('.tabs button:nth-child(1)').classList.add('active');
-                document.getElementById('tab-dashboard').classList.add('active');
-            } else if (tabName === 'standings') {
-                document.querySelector('.tabs button:nth-child(2)').classList.add('active');
-                document.getElementById('tab-standings').classList.add('active');
-            } else if (tabName === 'reports') {
-                document.querySelector('.tabs button:nth-child(3)').classList.add('active');
-                document.getElementById('tab-reports').classList.add('active');
-            }
-        }
-
-        function renderMetisIndex() {
-            const tbody = document.querySelector('#miTable tbody');
-            tbody.innerHTML = '';
-            const data = dbData['MetisIndex'] || [];
-            const sorted = data.sort((a, b) => b['Metis Index'] - a['Metis Index']).slice(0, 12);
-
-            sorted.forEach(row => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${row.Squadra}</b></td>
-                        <td><span class="metis-badge">${row['Metis Index']}</span></td>
-                        <td>${row['Forma (20%)']}</td>
-                        <td>${row['Attacco (15%)']}</td>
-                        <td>${row['Difesa (15%)']}</td>
-                        <td>${row['Trend (10%)']}</td>
-                    </tr>`;
-            });
-        }
-
-        function renderPreviewStandings() {
-            const tbody = document.querySelector('#previewStandingsTable tbody');
-            tbody.innerHTML = '';
-            const standings = dbData['Classifiche'] || [];
-            standings.slice(0, 10).forEach(row => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${row.Posizione}</td>
-                        <td><b>${row.Squadra}</b></td>
-                        <td><b>${row.Punti}</b></td>
-                        <td>${row.Giocate}</td>
-                        <td>${row['Gol Fatti']}</td>
-                        <td>${row['Gol Subiti']}</td>
-                    </tr>`;
-            });
-        }
-
-        function renderLeaguesDropdown() {
-            const select = document.getElementById('leagueSelect');
-            select.innerHTML = '';
-            const camp = dbData['Campionati'] || [];
-            camp.forEach(c => {
+            const championships = globalData['Campionati'] || [];
+            championships.forEach(c => {
                 const opt = document.createElement('option');
                 opt.value = c['Campionato Ufficiale'];
                 opt.textContent = c['Campionato Ufficiale'];
-                select.appendChild(opt);
+                selector.appendChild(opt);
             });
             renderStandings();
         }
 
+        // Renderizza la tabella classifiche in base al campionato selezionato
         function renderStandings() {
-            const league = document.getElementById('leagueSelect').value;
+            const league = document.getElementById('leagueSelector').value;
             const tbody = document.querySelector('#standingsTable tbody');
             tbody.innerHTML = '';
-            const standings = dbData['Classifiche'] || [];
+
+            const standings = globalData['Classifiche'] || [];
             const filtered = standings.filter(s => s.Campionato === league);
-            
+
             filtered.forEach(row => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${row.Posizione}</td>
-                        <td><b>${row.Squadra}</b></td>
+                        <td><b>${row.Posizione}</b></td>
+                        <td>${row.Squadra}</td>
                         <td><b>${row.Punti}</b></td>
                         <td>${row.Giocate}</td>
-                        <td>${row.Vinte}</td>
-                        <td>${row.Nulle}</td>
-                        <td>${row.Perse}</td>
-                        <td>${row['Gol Fatti']}</td>
-                        <td>${row['Gol Subiti']}</td>
-                        <td>${row['Diff Reti']}</td>
-                    </tr>`;
+                        <td><span class="badge-index">${row['Metis Index'] || '-'}</span></td>
+                    </tr>
+                `;
             });
         }
 
-        function renderReportsDropdown() {
-            const select = document.getElementById('reportLeagueSelect');
-            select.innerHTML = '';
-            const camp = dbData['Campionati'] || [];
-            camp.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c['Campionato Ufficiale'];
-                opt.textContent = c['Campionato Ufficiale'];
-                select.appendChild(opt);
-            });
-            renderReports();
-        }
+        // Funzione di ricerca istantanea
+        function filterMatches() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.match-card');
 
-        function renderReports() {
-            const league = document.getElementById('reportLeagueSelect').value;
-            const tbody = document.querySelector('#reportTable tbody');
-            tbody.innerHTML = '';
-            const reports = dbData['Report'] || [];
-            const filtered = reports.filter(r => r.Campionato === league);
-
-            filtered.forEach(row => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${row.Match}</b></td>
-                        <td>${row['Pos Casa']} / ${row['Pos Trasf']}</td>
-                        <td>${row['Metis Index Casa']} vs ${row['Metis Index Trasf']}</td>
-                        <td><span class="prediction-win">${row['Esito / Chi Vince']}</span></td>
-                        <td><span class="prediction-over">${row['Over/Under 1.5']}</span></td>
-                        <td>${row['Over/Under 2.5']}</td>
-                        <td>${row['Entrambe Segnano (BTTS)']}</td>
-                        <td>${row['Clean Sheet (Porta Inviolata)']}</td>
-                    </tr>`;
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
             });
         }
 
-        loadData();
+        // Avvio caricamento dati all'apertura
+        fetchDatabase();
     </script>
 </body>
 </html>
