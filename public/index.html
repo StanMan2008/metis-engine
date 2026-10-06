@@ -4,388 +4,637 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>METIS — More than just stats</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon del browser con il logo del gufo -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #F8F6E8;
+            --bg-main: #F8F6E8;
             --brand-purple: #8066B8;
-            --lavender: #EAE4F5;
-            --text-main: #202024;
-            --text-muted: #6b6b76;
+            --brand-purple-dark: #634d96;
+            --lavender-bg: #EAE4F5;
+            --text-dark: #202024;
+            --text-muted: #71717a;
             --accent-orange: #FF8A3D;
             --card-bg: #FFFFFF;
-            --border-color: #e2dec9;
+            --border-subtle: #e6e2cc;
+            --shadow-card: 0 10px 30px -10px rgba(128, 102, 184, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding-bottom: 90px;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header Principale */
         header {
+            background: rgba(248, 246, 232, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        .brand-area {
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--brand-purple);
+            box-shadow: 0 4px 12px rgba(128, 102, 184, 0.2);
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+
+        .brand-text span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .status-pill {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            box-shadow: var(--shadow-card);
+            transition: all 0.2s ease;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--brand-purple);
+            box-shadow: 0 0 0 4px rgba(128, 102, 184, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-purple);
+            font-size: 16px;
+        }
+
+        /* Barra Calendario per la sezione Partite */
+        .calendar-nav-bar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .cal-btn {
+            background: var(--lavender-bg);
+            border: none;
+            color: var(--brand-purple);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .cal-btn:hover {
+            background: var(--brand-purple);
+            color: white;
+        }
+
+        .cal-current-date {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cal-picker-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cal-picker-wrapper input[type="date"] {
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.3px;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 35px -10px rgba(128, 102, 184, 0.12);
+        }
+
+        .match-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .match-date-badge {
+            background: var(--lavender-bg);
+            color: var(--brand-purple);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+        }
+
+        .match-content {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .team-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .team-box.away {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .team-crest {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .team-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .match-prediction-panel {
+            background: var(--lavender-bg);
+            border-radius: 12px;
+            padding: 10px 18px;
+            text-align: center;
+            min-width: 130px;
+        }
+
+        .pred-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--brand-purple);
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .pred-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .fav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .fav-item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .fav-item-card:hover {
+            border-color: var(--brand-purple);
+            transform: translateY(-2px);
+        }
+
+        .fav-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .brand-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--brand-purple);
-        }
-
-        .brand-title h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--brand-purple);
-            letter-spacing: 0.5px;
-        }
-
-        .brand-title p {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Contenuto */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .section-view {
-            display: none;
-        }
-
-        .section-view.active {
-            display: block;
-        }
-
-        /* Barra di Ricerca */
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 14px 16px 14px 45px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-main);
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--brand-purple);
-            box-shadow: 0 0 0 3px rgba(128, 102, 184, 0.15);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--brand-purple);
+        .fav-action-star {
+            color: #f59e0b;
             font-size: 18px;
         }
 
-        /* Schede Partite */
-        .match-card {
+        .table-container {
             background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px rgba(128, 102, 184, 0.05);
-            transition: transform 0.2s;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 24px;
         }
 
-        .match-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .match-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .teams-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .team-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .team-badge-img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
-
-        .team-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .match-score {
+        .filter-select {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
             font-size: 14px;
             font-weight: 700;
-            background: var(--lavender);
-            color: var(--brand-purple);
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* Tabelle e Classifiche */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            color: var(--text-dark);
+            outline: none;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         th {
-            background: var(--lavender);
+            background: #f4f0df;
             color: var(--brand-purple);
-            padding: 12px 14px;
-            font-size: 12px;
+            padding: 14px 16px;
+            font-size: 11px;
+            font-weight: 800;
             text-transform: uppercase;
-            font-weight: 700;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-dark);
+            font-weight: 500;
         }
 
-        .table-team-cell {
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(234, 228, 245, 0.3);
+        }
+
+        .table-team {
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 700;
         }
 
-        .badge-index {
+        .badge-pill {
             background: var(--brand-purple);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
         }
 
-        .highlight {
+        .highlight-accent {
             color: var(--accent-orange);
-            font-weight: 700;
+            font-weight: 800;
         }
 
-        /* Bottom Navigation (Barra Mobile) */
-        .bottom-nav {
+        .nav-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--card-bg);
-            border-top: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 12px 0 max(16px, env(safe-area-inset-bottom));
             z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.04);
         }
 
-        .nav-item {
+        .nav-btn {
             background: none;
             border: none;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 4px;
             color: var(--text-muted);
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s ease;
         }
 
-        .nav-item span {
+        .nav-btn span {
             font-size: 20px;
-            margin-bottom: 2px;
         }
 
-        .nav-item.active {
+        .nav-btn.active {
             color: var(--brand-purple);
-            font-weight: 700;
+            font-weight: 800;
         }
 
-        .settings-card {
+        .info-card {
             background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 16px;
+        }
+
+        .info-card h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            margin-bottom: 8px;
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
-        <div class="brand-area">
+        <div class="header-brand">
             <img src="logo.png" alt="Metis Logo" class="brand-logo" onerror="this.style.display='none'">
-            <div class="brand-title">
+            <div class="brand-text">
                 <h1>METIS</h1>
-                <p>More than just stats</p>
+                <span>More than just stats</span>
             </div>
         </div>
-        <div id="connection-status" style="font-size: 12px; color: #22c55e; font-weight: 600;">● Online</div>
+        <div class="status-pill">Engine Active</div>
     </header>
 
-    <div class="container">
-        
-        <!-- HOME: PARTITE & PREDICTION HUB -->
-        <div id="tab-home" class="section-view active">
-            <div class="search-box">
+    <div class="app-container">
+
+        <!-- TAB HOME -->
+        <div id="section-home" class="view-section active">
+            <div class="search-wrapper">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Cerca squadre, campionati o partite..." oninput="filterMatches()">
+                <input type="text" id="searchInputHome" placeholder="Cerca squadra o match..." oninput="filterHomeContent()">
             </div>
 
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">🎯 Report Pronostici & Match</h2>
-            <div id="matchesContainer">
-                <p style="color: var(--text-muted); text-align: center; padding: 40px;">Caricamento dati dal database Excel in corso...</p>
+            <div class="section-header">
+                <h2>⚡ Prossime Partite & Match Hub</h2>
+            </div>
+            
+            <div id="homeMatchesContainer">
+                <div class="empty-state">Sincronizzazione dati analitici in corso...</div>
             </div>
         </div>
 
-        <!-- PREFERITI -->
-        <div id="tab-favorites" class="section-view">
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⭐ Squadre & Campionati Preferiti</h2>
-            <div class="settings-card">
-                <p style="color: var(--text-muted);">Seleziona le tue squadre preferite per tenerle sempre sott'occhio.</p>
+        <!-- TAB PREFERITI -->
+        <div id="section-favorites" class="view-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInputFav" placeholder="Cerca tra i preferiti..." oninput="filterFavoritesList()">
+            </div>
+
+            <div class="section-header">
+                <h2>⭐ Squadre & Campionati Preferiti (Lista Infinita)</h2>
+            </div>
+            
+            <div id="favoritesListContainer" class="fav-container"></div>
+
+            <div id="favoriteTeamMatchesArea"></div>
+        </div>
+
+        <!-- TAB PARTITE -->
+        <div id="section-matches" class="view-section">
+            <div class="calendar-nav-bar">
+                <button class="cal-btn" onclick="changeDate(-1)">◀ Giorno Prec</button>
+                <div class="cal-current-date">
+                    <span id="displayDateLabel">Oggi</span>
+                    <div class="cal-picker-wrapper" title="Seleziona data">
+                        📅 <input type="date" id="datePickerInput" onchange="onDateSelected(this.value)">
+                    </div>
+                </div>
+                <button class="cal-btn" onclick="changeDate(1)">Giorno Succ ▶</button>
+            </div>
+
+            <div class="section-header">
+                <h2>📅 Partite del Giorno</h2>
+            </div>
+            
+            <div id="dailyMatchesContainer">
+                <div class="empty-state">No dati</div>
             </div>
         </div>
 
-        <!-- FISSATE -->
-        <div id="tab-pinned" class="section-view">
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">📌 Partite Fissate</h2>
-            <div id="pinnedContainer">
-                <p style="color: var(--text-muted);">Nessuna partita fissata al momento.</p>
+        <!-- TAB CAMPIONATI -->
+        <div id="section-standings" class="view-section">
+            <div class="section-header">
+                <h2>📊 Classifiche Ufficiali & Metis Index</h2>
             </div>
-        </div>
+            
+            <select id="leagueSelector" class="filter-select" onchange="renderStandingsTable()"></select>
 
-        <!-- CLASSIFICHE -->
-        <div id="tab-standings" class="section-view">
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">📊 Classifiche & Metis Index</h2>
-            <div style="margin-bottom: 15px;">
-                <select id="leagueSelector" onchange="renderStandings()" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--card-bg); font-weight: 600; color: var(--text-main);">
-                </select>
-            </div>
-            <div class="table-responsive">
-                <table id="standingsTable">
+            <div class="table-container">
+                <table>
                     <thead>
                         <tr>
-                            <th>Pos</th>
+                            <th style="width: 50px;">Pos</th>
                             <th>Squadra</th>
-                            <th>Pt</th>
-                            <th>G</th>
-                            <th>Metis Index</th>
+                            <th style="text-align: center;">Pt</th>
+                            <th style="text-align: center;">G</th>
+                            <th style="text-align: center;">Metis Index</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody id="standingsBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- ALTRO -->
-        <div id="tab-more" class="section-view">
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: var(--brand-purple);">⚙️ Altro & Info</h2>
-            <div class="settings-card">
-                <strong>Metis Index</strong>
-                <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Indicatore proprietario basato su forma, attacco e difesa.</p>
+        <!-- TAB ALTRO -->
+        <div id="section-more" class="view-section">
+            <div class="section-header">
+                <h2>⚙️ Informazioni & Modello</h2>
             </div>
-            <div class="settings-card">
-                <strong>Piattaforma</strong>
-                <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">Metis Engine v2.5 Cloud 24/7</p>
+            <div class="info-card">
+                <h3>Metis Index Engine</h3>
+                <p>Algoritmo proprietario basato su 8 sub-metriche avanzate (Forma, Attacco, Difesa, Trend e xG).</p>
+            </div>
+            <div class="info-card">
+                <h3>Configurazione Cloud</h3>
+                <p>Ambiente Enterprise Serverless 24/7 attivo su infrastruttura Vercel & Node.js.</p>
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home', this)">
-            <span>🏠</span>Home
+    <!-- Bottom Nav -->
+    <nav class="nav-bar">
+        <button class="nav-btn active" onclick="switchTab('home', this)">
+            <span>⚡</span>Home
         </button>
-        <button class="nav-item" onclick="switchTab('favorites', this)">
+        <button class="nav-btn" onclick="switchTab('favorites', this)">
             <span>⭐</span>Preferiti
         </button>
-        <button class="nav-item" onclick="switchTab('pinned', this)">
-            <span>📌</span>Fissate
+        <button class="nav-btn" onclick="switchTab('matches', this)">
+            <span>📅</span>Partite
         </button>
-        <button class="nav-item" onclick="switchTab('standings', this)">
+        <button class="nav-btn" onclick="switchTab('standings', this)">
             <span>📊</span>Campionati
         </button>
-        <button class="nav-item" onclick="switchTab('more', this)">
+        <button class="nav-btn" onclick="switchTab('more', this)">
             <span>⚙️</span>Altro
         </button>
     </nav>
 
     <script>
-        let globalData = {};
+        let dbCache = {};
+        let currentDateSelected = new Date().toISOString().split('T')[0];
 
-        // Funzione per generare un logo o stemma basato sul nome della squadra
-        function getTeamLogoUrl(teamName) {
-            if (!teamName) return 'https://crests.football-data.org/default.svg';
-            // Esempio di mapping pulito per loghi ufficiali da CDN sportive pubbliche
-            const cleanName = teamName.trim().toLowerCase();
-            
-            // Mappa rapida di fallback o ID noti (puoi estenderla facilmente)
-            const mapping = {
+        const LEAGUE_PRIORITY = [
+            "Serie A", "Premier League", "La Liga", "Bundesliga", "Ligue 1", "Serie B", "Champions League", "Europa League"
+        ];
+
+        function getTeamLogo(name) {
+            if (!name) return 'https://crests.football-data.org/default.svg';
+            const clean = name.trim().toLowerCase();
+            const logos = {
                 'milan': 'https://crests.football-data.org/98.svg',
                 'inter': 'https://crests.football-data.org/108.svg',
                 'juventus': 'https://crests.football-data.org/109.svg',
@@ -398,132 +647,285 @@
                 'atletico madrid': 'https://crests.football-data.org/78.svg',
                 'manchester city': 'https://crests.football-data.org/65.svg',
                 'arsenal': 'https://crests.football-data.org/57.svg',
-                'liverpool': 'https://crests.football-data.org/64.svg'
+                'liverpool': 'https://crests.football-data.org/64.svg',
+                'bayern munich': 'https://crests.football-data.org/5.svg',
+                'psg': 'https://crests.football-data.org/524.svg'
             };
+            return logos[clean] || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=EAE4F5&color=8066B8&bold=true&size=64`;
+        }
 
-            if (mapping[cleanName]) {
-                return mapping[cleanName];
+        function switchTab(id, btn) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            if(id === 'matches') {
+                renderDailyMatches();
             }
-
-            // Fallback generico con le iniziali o stemma neutro
-            return `https://ui-avatars.com/api/?name=${encodeURIComponent(teamName)}&background=EAE4F5&color=8066B8&bold=true&size=64`;
         }
 
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(element) element.classList.add('active');
-        }
-
-        async function fetchDatabase() {
+        async function initApp() {
             try {
-                const response = await fetch('/api/data');
-                globalData = await response.json();
+                const res = await fetch('/api/data');
+                dbCache = await res.json();
                 
-                renderHomeMatches();
-                populateLeaguesDropdown();
-            } catch (error) {
-                console.error("Errore nel recupero dati:", error);
-                document.getElementById('matchesContainer').innerHTML = `<p style="text-align:center; color: #ef4444;">Impossibile caricare i dati dal database Excel.</p>`;
+                renderHome();
+                renderFavoritesList();
+                populateLeagues();
+                renderDailyMatches();
+            } catch (err) {
+                console.error("Errore fetch:", err);
+                document.getElementById('homeMatchesContainer').innerHTML = `<div class="empty-state">Impossibile connettersi al database analitico.</div>`;
             }
         }
 
-        function renderHomeMatches() {
-            const container = document.getElementById('matchesContainer');
+        function renderHome() {
+            const container = document.getElementById('homeMatchesContainer');
             container.innerHTML = '';
 
-            const reports = globalData['Report'] || [];
+            let reports = dbCache['Report'] || [];
             if (reports.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color: var(--text-muted);">Nessun match trovato nel database Excel.</p>`;
+                container.innerHTML = `<div class="empty-state">No dati</div>`;
                 return;
             }
 
             reports.forEach(match => {
-                // Estrae le due squadre dal testo del match (es. "Milan - Inter")
-                const matchParts = match.Match ? match.Match.split(/vs|-/) : ['Squadra Casa', 'Squadra Trasferta'];
-                const homeTeam = matchParts[0] ? matchParts[0].trim() : 'Casa';
-                const awayTeam = matchParts[1] ? matchParts[1].trim() : 'Ospiti';
+                let parts = match.Match ? match.Match.split(/vs|-/) : ['Casa', 'Trasferta'];
+                let home = parts[0] ? parts[0].trim() : 'Casa';
+                let away = parts[1] ? parts[1].trim() : 'Trasferta';
+                let matchDate = match.Data || 'Prossimamente';
 
                 container.innerHTML += `
                     <div class="match-card">
-                        <div class="match-header">
+                        <div class="match-meta">
                             <span>🏆 ${match.Campionato || 'Campionato'}</span>
-                            <span class="highlight">Esito: ${match['Esito / Chi Vince'] || 'N/D'}</span>
+                            <span class="match-date-badge">📅 ${matchDate}</span>
+                            <span class="highlight-accent">Pronostico: ${match['Esito / Chi Vince'] || 'N/D'}</span>
                         </div>
-                        <div class="match-body">
-                            <div class="teams-container">
-                                <div class="team-row">
-                                    <img src="${getTeamLogoUrl(homeTeam)}" class="team-badge-img" alt="${homeTeam}">
-                                    <span class="team-name">${homeTeam}</span>
-                                </div>
-                                <div class="team-row">
-                                    <img src="${getTeamLogoUrl(awayTeam)}" class="team-badge-img" alt="${awayTeam}">
-                                    <span class="team-name">${awayTeam}</span>
-                                </div>
-                            </div>
-                            <div class="match-score">
-                                <div style="font-size: 11px; color: var(--text-muted); font-weight: normal;">Over 2.5</div>
-                                ${match['Over/Under 2.5'] || '-'}
-                            </div>
+                        <div class="match-content">
+                            <div class="team-box"><img src="${getTeamLogo(home)}" class="team-crest"><div class="team-name">${home}</div></div>
+                            <div class="match-prediction-panel"><div class="pred-label">O/U 2.5</div><div class="pred-value">${match['Over/Under 2.5'] || '-'}</div></div>
+                            <div class="team-box away"><div class="team-name">${away}</div><img src="${getTeamLogo(away)}" class="team-crest"></div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function populateLeaguesDropdown() {
-            const selector = document.getElementById('leagueSelector');
-            selector.innerHTML = '';
-            
-            const championships = globalData['Campionati'] || [];
-            championships.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c['Campionato Ufficiale'];
-                opt.textContent = c['Campionato Ufficiale'];
-                selector.appendChild(opt);
+        function renderFavoritesList() {
+            const container = document.getElementById('favoritesListContainer');
+            container.innerHTML = '';
+
+            let teamsSet = new Set();
+            let leaguesSet = new Set();
+
+            (dbCache['Report'] || []).forEach(m => {
+                if(m.Campionato) leaguesSet.add(m.Campionato);
+                if(m.Match) {
+                    let parts = m.Match.split(/vs|-/);
+                    if(parts[0]) teamsSet.add(parts[0].trim());
+                    if(parts[1]) teamsSet.add(parts[1].trim());
+                }
             });
-            renderStandings();
+
+            (dbCache['Classifiche'] || []).forEach(c => {
+                if(c.Squadra) teamsSet.add(c.Squadra);
+                if(c.Campionato) leaguesSet.add(c.Campionato);
+            });
+
+            leaguesSet.forEach(league => {
+                container.innerHTML += `
+                    <div class="fav-item-card" onclick="filterByFavoriteItem('${league}', 'league')">
+                        <div class="fav-info">
+                            <span style="font-size: 20px;">🏆</span>
+                            <div>
+                                <div style="font-weight: 700; font-size: 14px;">${league}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Campionato Seguito</div>
+                            </div>
+                        </div>
+                        <span class="fav-action-star">⭐</span>
+                    </div>
+                `;
+            });
+
+            teamsSet.forEach(team => {
+                container.innerHTML += `
+                    <div class="fav-item-card" onclick="filterByFavoriteItem('${team}', 'team')">
+                        <div class="fav-info">
+                            <img src="${getTeamLogo(team)}" class="team-crest" alt="${team}">
+                            <div style="font-weight: 700; font-size: 14px;">${team}</div>
+                        </div>
+                        <span class="fav-action-star">⭐</span>
+                    </div>
+                `;
+            });
         }
 
-        function renderStandings() {
+        function filterByFavoriteItem(name, type) {
+            const area = document.getElementById('favoriteTeamMatchesArea');
+            area.innerHTML = `<h3 style="margin: 20px 0 10px 0; color: var(--brand-purple);">Partite per: ${name}</h3>`;
+            
+            let reports = dbCache['Report'] || [];
+            let matchesFound = reports.filter(m => {
+                if(type === 'league') return m.Campionato === name;
+                if(type === 'team') return m.Match && m.Match.includes(name);
+                return false;
+            });
+
+            if(matchesFound.length === 0) {
+                area.innerHTML += `<div class="empty-state">No dati</div>`;
+                return;
+            }
+
+            matchesFound.forEach(match => {
+                let parts = match.Match ? match.Match.split(/vs|-/) : ['Casa', 'Trasferta'];
+                let home = parts[0] ? parts[0].trim() : 'Casa';
+                let away = parts[1] ? parts[1].trim() : 'Trasferta';
+
+                area.innerHTML += `
+                    <div class="match-card">
+                        <div class="match-meta">
+                            <span>🏆 ${match.Campionato || 'Campionato'}</span>
+                            <span class="match-date-badge">📅 ${match.Data || 'N/D'}</span>
+                            <span class="highlight-accent">Pronostico: ${match['Esito / Chi Vince'] || 'N/D'}</span>
+                        </div>
+                        <div class="match-content">
+                            <div class="team-box"><img src="${getTeamLogo(home)}" class="team-crest"><div class="team-name">${home}</div></div>
+                            <div class="match-prediction-panel"><div class="pred-label">O/U 2.5</div><div class="pred-value">${match['Over/Under 2.5'] || '-'}</div></div>
+                            <div class="team-box away"><div class="team-name">${away}</div><img src="${getTeamLogo(away)}" class="team-crest"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderDailyMatches() {
+            const container = document.getElementById('dailyMatchesContainer');
+            container.innerHTML = '';
+
+            document.getElementById('displayDateLabel').textContent = currentDateSelected;
+            document.getElementById('datePickerInput').value = currentDateSelected;
+
+            let reports = dbCache['Report'] || [];
+            let filtered = reports.filter(m => m.Data === currentDateSelected);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state">No dati</div>`;
+                return;
+            }
+
+            filtered.forEach(match => {
+                let parts = match.Match ? match.Match.split(/vs|-/) : ['Casa', 'Trasferta'];
+                let home = parts[0] ? parts[0].trim() : 'Casa';
+                let away = parts[1] ? parts[1].trim() : 'Trasferta';
+
+                container.innerHTML += `
+                    <div class="match-card">
+                        <div class="match-meta">
+                            <span>🏆 ${match.Campionato || 'Campionato'}</span>
+                            <span class="highlight-accent">Pronostico: ${match['Esito / Chi Vince'] || 'N/D'}</span>
+                        </div>
+                        <div class="match-content">
+                            <div class="team-box"><img src="${getTeamLogo(home)}" class="team-crest"><div class="team-name">${home}</div></div>
+                            <div class="match-prediction-panel"><div class="pred-label">O/U 2.5</div><div class="pred-value">${match['Over/Under 2.5'] || '-'}</div></div>
+                            <div class="team-box away"><div class="team-name">${away}</div><img src="${getTeamLogo(away)}" class="team-crest"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function changeDate(days) {
+            let d = new Date(currentDateSelected);
+            d.setDate(d.getDate() + days);
+            currentDateSelected = d.toISOString().split('T')[0];
+            renderDailyMatches();
+        }
+
+        function onDateSelected(val) {
+            if(val) {
+                currentDateSelected = val;
+                renderDailyMatches();
+            }
+        }
+
+        function populateLeagues() {
+            const selector = document.getElementById('leagueSelector');
+            selector.innerHTML = '';
+
+            let camps = dbCache['Campionati'] || [];
+            let leagueNames = camps.map(c => c['Campionato Ufficiale']).filter(Boolean);
+            
+            let standings = dbCache['Classifiche'] || [];
+            standings.forEach(s => {
+                if (s.Campionato && !leagueNames.includes(s.Campionato)) leagueNames.push(s.Campionato);
+            });
+
+            leagueNames.sort((a, b) => {
+                let iA = LEAGUE_PRIORITY.findIndex(l => a.toLowerCase().includes(l.toLowerCase()));
+                let iB = LEAGUE_PRIORITY.findIndex(l => b.toLowerCase().includes(l.toLowerCase()));
+                if (iA !== -1 && iB !== -1) return iA - iB;
+                if (iA !== -1) return -1;
+                if (iB !== -1) return 1;
+                return a.localeCompare(b);
+            }).forEach(league => {
+                const opt = document.createElement('option');
+                opt.value = league;
+                opt.textContent = league;
+                selector.appendChild(opt);
+            });
+
+            renderStandingsTable();
+        }
+
+        function renderStandingsTable() {
             const league = document.getElementById('leagueSelector').value;
-            const tbody = document.querySelector('#standingsTable tbody');
+            const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
 
-            const standings = globalData['Classifiche'] || [];
-            const filtered = standings.filter(s => s.Campionato === league);
+            let standings = dbCache['Classifiche'] || [];
+            let filtered = standings.filter(s => s.Campionato === league);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 30px;">No dati</td></tr>`;
+                return;
+            }
 
             filtered.forEach(row => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>${row.Posizione}</b></td>
+                        <td style="font-weight: 800; color: var(--brand-purple);">${row.Posizione}</td>
                         <td>
-                            <div class="table-team-cell">
-                                <img src="${getTeamLogoUrl(row.Squadra)}" class="team-badge-img" alt="${row.Squadra}">
-                                <b>${row.Squadra}</b>
+                            <div class="table-team">
+                                <img src="${getTeamLogo(row.Squadra)}" class="team-crest" style="width:24px; height:24px;" alt="${row.Squadra}">
+                                <span>${row.Squadra}</span>
                             </div>
                         </td>
-                        <td><b>${row.Punti}</b></td>
-                        <td>${row.Giocate}</td>
-                        <td><span class="badge-index">${row['Metis Index'] || '-'}</span></td>
+                        <td style="text-align: center; font-weight: 800;">${row.Punti}</td>
+                        <td style="text-align: center;">${row.Giocate}</td>
+                        <td style="text-align: center;"><span class="badge-pill">${row['Metis Index'] || '-'}</span></td>
                     </tr>
                 `;
             });
         }
 
-        function filterMatches() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.match-card');
-
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(query) ? 'block' : 'none';
+        function filterHomeContent() {
+            const query = document.getElementById('searchInputHome').value.toLowerCase();
+            document.querySelectorAll('#homeMatchesContainer .match-card').forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(query) ? 'block' : 'none';
             });
         }
 
-        fetchDatabase();
+        function filterFavoritesList() {
+            const query = document.getElementById('searchInputFav').value.toLowerCase();
+            document.querySelectorAll('.fav-item-card').forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        initApp();
     </script>
 </body>
 </html>
