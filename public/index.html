@@ -1,624 +1,310 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-t="l">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>METIS — Il calcio, con gli occhi dell'intelligenza</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Libreria SheetJS per leggere l'intero file Excel in automatico -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <style>
-        :root {
-            --bg-main: #F8F6E8;
-            --brand-purple: #8066B8;
-            --brand-purple-dark: #634d96;
-            --lavender-bg: #EAE4F5;
-            --text-dark: #202024;
-            --text-muted: #71717a;
-            --accent-orange: #FF8A3D;
-            --card-bg: #FFFFFF;
-            --border-subtle: #e6e2cc;
-            --shadow-card: 0 10px 30px -10px rgba(128, 102, 184, 0.08);
-            --shadow-float: 0 20px 40px -15px rgba(128, 102, 184, 0.2);
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-dark);
-            min-height: 100vh;
-            padding-bottom: 110px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        header {
-            background: rgba(248, 246, 232, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 14px 20px;
-            position: sticky; top: 0; z-index: 900;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .header-brand { display: flex; align-items: center; gap: 12px; }
-        .brand-logo-container {
-            width: 42px; height: 42px; background: var(--brand-purple); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; border: 2px solid var(--brand-purple);
-        }
-        .brand-logo-container svg { width: 28px; height: 28px; fill: #F8F6E8; }
-        .brand-text h1 { font-size: 18px; font-weight: 800; color: var(--brand-purple); line-height: 1.1; }
-        .brand-text span { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 700; }
-
-        .status-pill {
-            background: rgba(34, 197, 94, 0.1); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.2);
-            padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .status-pill::before { content: ''; width: 6px; height: 6px; background-color: #16a34a; border-radius: 50%; display: inline-block; }
-
-        .app-container { max-width: 768px; margin: 0 auto; padding: 20px 16px; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.2s ease-in-out; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        .search-wrapper { position: relative; margin-bottom: 16px; }
-        .search-wrapper input {
-            width: 100%; padding: 14px 16px 14px 46px; background: var(--card-bg);
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            color: var(--text-dark); font-size: 14px; font-weight: 500; outline: none; box-shadow: var(--shadow-card);
-        }
-        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--brand-purple); }
-
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; margin-top: 6px; }
-        .section-header h2 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
-
-        .calendar-nav-bar {
-            background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; box-shadow: var(--shadow-card); gap: 8px;
-        }
-        .cal-day-btn { background: var(--lavender-bg); border: none; color: var(--brand-purple); padding: 6px 12px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; font-size: 11px; }
-        .cal-day-btn.active { background: var(--brand-purple); color: #fff; }
-
-        .cal-picker-wrapper {
-            position: relative; cursor: pointer; display: flex; align-items: center; gap: 4px;
-            font-weight: 700; font-size: 12px; color: var(--brand-purple); background: var(--lavender-bg); padding: 6px 10px; border-radius: var(--radius-sm);
-        }
-        .cal-picker-wrapper input[type="date"] { position: absolute; opacity: 0; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
-
-        /* MATCH CARD CON METIS INDEX IN PRIMO PIANO */
-        .match-card {
-            background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
-            padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-card); cursor: pointer; transition: transform 0.2s;
-        }
-        .match-card:hover { transform: translateY(-2px); box-shadow: 0 14px 35px -10px rgba(128, 102, 184, 0.12); }
-
-        .match-meta {
-            display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle);
-        }
-        .match-date-badge { background: var(--lavender-bg); color: var(--brand-purple); padding: 3px 8px; border-radius: 6px; font-size: 10px; }
-
-        .metis-index-showcase {
-            background: var(--lavender-bg); border-radius: var(--radius-md); padding: 12px 16px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
-        }
-        .metis-index-block { text-align: center; }
-        .metis-index-label { font-size: 9px; text-transform: uppercase; font-weight: 800; color: var(--brand-purple); letter-spacing: 0.8px; margin-bottom: 2px; }
-        .metis-index-number { font-size: 22px; font-weight: 800; color: var(--brand-purple-dark); letter-spacing: -0.5px; }
-
-        .match-content { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
-        .team-box { display: flex; align-items: center; gap: 10px; }
-        .team-box.away { justify-content: flex-end; text-align: right; }
-        .team-crest { width: 32px; height: 32px; object-fit: contain; }
-        .team-name { font-weight: 700; font-size: 14px; color: var(--text-dark); }
-
-        .fav-star {
-            background: var(--card-bg); border: 1.5px solid var(--brand-purple); width: 28px; height: 28px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--brand-purple); font-size: 14px;
-        }
-        .fav-star.active { background: var(--brand-purple); color: #F8F6E8; }
-
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .card-item {
-            background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            padding: 14px 16px; box-shadow: var(--shadow-card); display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-        }
-        .card-info { display: flex; align-items: center; gap: 12px; }
-
-        .table-container { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); margin-bottom: 20px; }
-        .filter-select {
-            width: 100%; padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: var(--text-dark); outline: none; margin-bottom: 14px; cursor: pointer;
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        th { background: #f4f0df; color: var(--brand-purple); padding: 12px 14px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border-subtle); }
-        td { padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-dark); font-weight: 500; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: rgba(234, 228, 245, 0.3); }
-
-        .badge-pill { background: var(--brand-purple); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; }
-        .highlight-accent { color: var(--accent-orange); font-weight: 800; }
-
-        .info-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-card); margin-bottom: 14px; cursor: pointer; }
-        .info-card h3 { font-size: 14px; font-weight: 800; color: var(--brand-purple); margin-bottom: 6px; }
-        .info-card p { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-
-        #view-match-detail {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-main); z-index: 1050; overflow-y: auto; padding: 20px 16px 100px 16px; display: none;
-        }
-        .detail-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .back-btn { background: var(--card-bg); border: 1px solid var(--border-subtle); padding: 8px 14px; border-radius: var(--radius-sm); font-weight: 700; color: var(--brand-purple); cursor: pointer; font-size: 12px; }
-        .match-hero-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; text-align: center; box-shadow: var(--shadow-card); margin-bottom: 16px; }
-        .hero-teams { display: flex; justify-content: space-around; align-items: center; margin: 16px 0; }
-        .hero-team-block { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 35%; }
-        .hero-team-block img { width: 50px; height: 50px; object-fit: contain; }
-        .hero-team-block span { font-weight: 800; font-size: 15px; }
-
-        .sub-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; }
-        .sub-tab-btn {
-            background: var(--card-bg); border: 1px solid var(--border-subtle); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; white-space: nowrap;
-        }
-        .sub-tab-btn.active { background: var(--brand-purple); color: #fff; border-color: var(--brand-purple); }
-
-        .stat-row-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card); }
-        .stat-info-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-
-        #infoTooltipModal {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(32, 32, 36, 0.4); backdrop-filter: blur(4px); z-index: 1200; display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .tooltip-card { background: var(--card-bg); border-radius: var(--radius-lg); padding: 24px; max-width: 420px; width: 100%; box-shadow: var(--shadow-float); position: relative; }
-        .tooltip-card h3 { color: var(--brand-purple); font-size: 16px; font-weight: 800; margin-bottom: 8px; }
-        .tooltip-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
-        .tooltip-close { position: absolute; top: 16px; right: 16px; background: var(--lavender-bg); border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; color: var(--brand-purple); cursor: pointer; }
-
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-around; padding: 10px 0 max(14px, env(safe-area-inset-bottom)); z-index: 1000;
-        }
-        .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; }
-        .nav-btn svg { width: 20px; height: 20px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .nav-btn.active { color: var(--brand-purple); font-weight: 800; }
-        .nav-btn.active svg { stroke: var(--brand-purple); }
-
-        .empty-state { text-align: center; padding: 36px; color: var(--text-muted); font-weight: 600; background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); font-size: 13px; }
-        .q-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: var(--lavender-bg); color: var(--brand-purple); border-radius: 50%; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 4px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F9F4DC">
+<title>METIS · More than just stats</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234B2E83'/%3E%3Ccircle cx='21' cy='30' r='11' fill='%23F8F6E8'/%3E%3Ccircle cx='43' cy='30' r='11' fill='%23F8F6E8'/%3E%3Ccircle cx='21' cy='30' r='4' fill='%238066B8'/%3E%3Ccircle cx='43' cy='30' r='4' fill='%238066B8'/%3E%3Cpath d='M32 38l-4 8h8z' fill='%23F8F6E8'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#F9F4DC;--card:#FFFCEF;--ln:#E7E0BE;--tx:#202024;--mu:#6F6C60;--v:#8066B8;--vd:#4B2E83;--lav:#EAE4F5;--o:#EE7413}
+[data-t=d]{--bg:#17141F;--card:#221E2D;--ln:#332D44;--tx:#F3EFE0;--mu:#A29DB5;--v:#9C85D6;--vd:#C9B8F5;--lav:#2E2742;--o:#FF9442}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font:500 14px/1.4 'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx);padding-bottom:96px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--v);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln);padding-top:env(safe-area-inset-top)}
+header .wrap{display:flex;align-items:center;gap:10px;height:58px}
+header svg{width:30px;height:39px}
+.wm{font-weight:800;font-size:23px;letter-spacing:3px;color:var(--vd);line-height:1}
+.wm small{display:block;font-size:8px;letter-spacing:2.6px;color:var(--mu);font-weight:600;margin-top:3px}
+#sb{padding-top:14px}
+#sb input{width:100%;padding:13px 16px 13px 44px;border-radius:14px;border:1.5px solid var(--ln);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238066B8' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-4-4'/%3E%3C/svg%3E") 15px 50%/20px no-repeat;color:var(--tx);font:inherit}
+#sb input:focus{border-color:var(--v);outline:0}
+.sh{display:flex;align-items:center;gap:8px;margin:22px 0 10px;font-size:15px;font-weight:800;color:var(--vd)}
+.sh small{margin-left:auto;font-size:11px;color:var(--mu);font-weight:700}
+.sh .star{margin-left:auto}.sh .star+small{margin-left:0}
+.lg{padding-top:2px;border-top:2px solid var(--v);padding-top:10px}
+.mc{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:12px 14px 12px;margin-bottom:10px;cursor:pointer;transition:transform .15s}
+.mc:active{transform:scale(.985)}
+.mh{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--mu);min-height:26px}
+.mh em{font-style:normal;background:var(--lav);color:var(--vd);padding:2px 8px;border-radius:20px;margin-left:6px;font-size:10px}
+.mt{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:6px 0 10px}
+.tm{display:flex;align-items:center;gap:8px;min-width:0}.tm.r{justify-content:flex-end;text-align:right}
+.tm b{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+.w{color:var(--o)!important}b.w{text-transform:uppercase;font-size:14.5px;font-weight:800}
+.vs{display:flex;gap:4px;align-items:baseline;font-weight:800;font-size:20px;color:var(--vd)}.vs i{font-style:normal;color:var(--mu);font-size:14px}
+.vs span.w{font-size:23px}
+.bd{flex:none;width:34px;height:34px;border-radius:50%;background:var(--lav);color:var(--vd);display:grid;place-items:center;font-size:11px;font-weight:800;border:1.5px solid var(--v)}
+.pb{display:flex;gap:3px;height:6px}.pb i{background:var(--v);border-radius:4px}.pb i.w{background:var(--o)}
+.mf{font-size:11px;color:var(--mu);margin-top:8px;font-weight:600}.mf .w{font-weight:800;text-transform:uppercase}
+.star{flex:none;width:32px;height:32px;display:grid;place-items:center}
+.star svg{width:24px;height:24px;overflow:visible}
+.star polygon{fill:var(--card);stroke:var(--v);stroke-width:1.8;stroke-linejoin:round;transition:fill .2s}
+.star.on polygon{fill:url(#ballp);stroke:var(--vd)}
+.star.pop svg{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.6) rotate(-25deg)}100%{transform:none}}
+.seg{display:flex;background:var(--lav);padding:3px;border-radius:12px;margin:14px 0}
+.seg button{flex:1;padding:8px 4px;border-radius:9px;font-weight:700;font-size:12.5px;color:var(--mu)}
+.seg button.on{background:var(--card);color:var(--vd);box-shadow:0 1px 4px #0002}
+.db{display:flex;align-items:center;gap:8px;margin-top:14px}
+.db button,.db label{background:var(--card);border:1px solid var(--ln);border-radius:12px;height:44px}
+.db button{width:44px;font-size:22px;color:var(--v);font-weight:700}
+.db label{flex:1;display:grid;place-items:center;font-weight:800;color:var(--vd);position:relative;text-transform:capitalize}
+.db input{position:absolute;inset:0;opacity:0;width:100%}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.row .n{flex:1;min-width:0}.row b{display:block;font-weight:700}.row small{color:var(--mu);font-size:11.5px}
+.row.cl{cursor:pointer}
+.mi{background:var(--v);color:#fff;border-radius:8px;padding:3px 8px;font-weight:800;font-size:12px}
+.empty{text-align:center;color:var(--mu);padding:34px 20px;background:var(--card);border:1px dashed var(--ln);border-radius:18px;font-weight:600}
+.empty svg{width:56px;margin-bottom:8px}.empty button{margin-top:12px;background:var(--v);color:#fff;padding:9px 18px;border-radius:12px;font-weight:700}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
+nav .wrap{display:flex;justify-content:space-around;padding:6px 0}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--mu);padding:6px 10px;border-radius:12px;min-width:58px}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--vd);font-weight:800}nav button.on svg{stroke:var(--v);fill:var(--lav)}
+#ov{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;display:none;padding-bottom:40px}
+#ov.show{display:block}#ov.anim{animation:up .28s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.top{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 10px) 0 6px}
+.top .bk{width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--ln);font-size:20px;color:var(--vd)}
+.top h1{flex:1;font-size:16px;font-weight:800;color:var(--vd)}
+.hero{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:16px;margin-top:8px;text-align:center}
+.hero .ht{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:start;margin:14px 0 4px}
+.hero .t{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800}
+.hero .bd{width:58px;height:58px;font-size:17px}.hero .big{font-size:34px;font-weight:800;color:var(--vd);padding-top:10px;display:flex;gap:6px}.hero .big i{font-style:normal;color:var(--mu)}
+.hero .big .w{font-size:38px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:14px 16px;margin-bottom:12px}
+.card h3{font-size:14px;font-weight:800;color:var(--vd);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.card p{color:var(--mu);font-size:12.5px;line-height:1.55}
+.q{width:17px;height:17px;border-radius:50%;border:1.3px solid var(--v);color:var(--v);font-size:10px;font-weight:800;line-height:1;display:inline-grid;place-items:center;vertical-align:middle;margin-left:5px;flex:none}
+.mk{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--ln);gap:10px}.mk:last-child{border:0}
+.mk span:first-child{color:var(--mu);font-weight:600}.mk span:last-child{font-weight:700;text-align:right}
+.mk .w{text-transform:uppercase;font-size:12.5px;font-weight:800}
+.gh{display:flex;justify-content:space-between;font-weight:800;font-size:12px;color:var(--vd);margin:4px 0 6px}
+.sr{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;padding:9px 0;border-bottom:1px solid var(--ln);row-gap:6px}
+.sr:last-child{border:0}.sr .v{font-weight:700;font-size:14px}.sr .v.r{text-align:right}.sr .v.w{font-size:16px;font-weight:800;text-transform:uppercase}
+.sr .l{text-align:center;font-size:12px;color:var(--mu);font-weight:600}
+.bar{grid-column:1/-1;display:flex;gap:3px;height:5px}.bar i{background:var(--v);border-radius:3px;opacity:.55}.bar i.w{background:var(--o);opacity:1}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-size:10px;color:var(--mu);text-align:center;padding:6px 3px;font-weight:700}td{padding:8px 3px;text-align:center;border-top:1px solid var(--ln)}
+td.t{text-align:left;font-weight:700}td.p{color:var(--vd);font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chips span{background:var(--lav);color:var(--vd);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.btn{display:block;width:100%;background:var(--v);color:#fff;font-weight:700;padding:12px;border-radius:12px;margin-top:12px;text-align:center}
+.btn.o{background:var(--lav);color:var(--vd)}
+#tip{position:fixed;inset:0;z-index:60;background:#14101e66;backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;padding:16px}
+#tip.show{display:flex}
+#tip div{background:var(--card);border-radius:22px;padding:22px;max-width:480px;width:100%;animation:up .25s}
+#tip h3{color:var(--vd);font-size:17px;margin-bottom:8px}#tip p{color:var(--mu);line-height:1.6}
+.dh{font-size:12px;font-weight:800;color:var(--mu);margin:14px 0 8px;text-transform:capitalize}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<pattern id="ballp" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" style="fill:var(--vd)"/><polygon points="3.5,1.6 5.3,2.9 4.6,5 2.4,5 1.7,2.9" style="fill:var(--bg)"/></pattern>
+<g id="eye"><circle r="14" fill="#4B2E83"/><circle r="10.6" fill="#F8F6E8"/><polygon points="0,-4.6 4.4,-1.4 2.7,3.7 -2.7,3.7 -4.4,-1.4" fill="#4B2E83"/><path d="M0-4.6V-9M4.4-1.4L8.6-2.8M2.7 3.7L5.4 7.4M-2.7 3.7L-5.4 7.4M-4.4-1.4L-8.6-2.8" stroke="#4B2E83" stroke-width="1.1"/></g>
+<symbol id="owl" viewBox="0 0 100 130"><path fill="#4B2E83" d="M8 3C10 24 26 32 38 42L37 24C28 20 17 13 8 3zM92 3C90 24 74 32 62 42L63 24C72 20 83 13 92 3zM28 17Q50 4 72 17L50 42zM50 58C43 65 45 73 50 82 55 73 57 65 50 58zM7 66C0 100 26 120 50 129 34 104 20 88 7 66zM93 66C100 100 74 120 50 129 66 104 80 88 93 66zM16 52C12 62 18 74 30 78 24 70 21 62 16 52zM84 52C88 62 82 74 70 78 76 70 79 62 84 52z"/><use href="#eye" x="32" y="50"/><use href="#eye" x="68" y="50"/></symbol>
+</defs></svg>
 
-    <header>
-        <div class="header-brand">
-            <div class="brand-logo-container">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 3v18M3 12h18M5.636 5.636l12.728 12.728M5.636 18.364L18.364 5.636"/></svg>
-            </div>
-            <div class="brand-text">
-                <h1>METIS</h1>
-                <span id="seasonLabel">Auto-sync da Excel</span>
-            </div>
-        </div>
-        <div class="status-pill">Excel Sync Attivo</div>
-    </header>
+<header><div class="wrap"><svg viewBox="0 0 100 130"><use href="#owl"/></svg><div class="wm">METIS<small>MORE THAN JUST STATS</small></div></div></header>
+<main class="wrap">
+<div id="sb"><input id="q" type="search" placeholder="Cerca squadra, campionato o partita…" autocomplete="off"></div>
+<div id="view"></div>
+</main>
+<div id="ov"><div class="wrap" id="ovc"></div></div>
+<div id="tip"><div><h3 id="tt"></h3><p id="td"></p><button class="btn" data-act="tipx">Capito</button></div></div>
+<nav><div class="wrap" id="nav"></div></nav>
 
-    <div class="app-container">
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const n=parseFloat(String(v??'').replace('%','').replace(',','.'));return isNaN(n)?null:n};
+const ln=c=>String(c).replace(/\s*\d{4}$/,''),nm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const lsg=k=>{try{return localStorage.getItem(k)}catch{return null}},lss=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+const PRI=['Serie A','Premier League','La Liga','Bundesliga','Ligue 1','Serie B','Championship','Eredivisie Olanda','Liga Portugal'];
+const S={tab:'home',date:null,q:'',sq:'t',ft:'t',fav:new Set(JSON.parse(lsg('metis.fav')||'[]')),ov:null,pop:null,theme:lsg('metis.theme')||'auto',err:false,upd:null};
+let M=[],MI=new Map(),ST=new Map(),CL={},CLT=new Map(),H2=new Map(),LG=[],SEASON='';
+const TIP={
+index:['Metis Index','Punteggio da 0 a 100 che riassume lo stato di una squadra combinando forma, attacco, difesa e altri 5 fattori. Più è alto, più la squadra è in salute.'],
+forma:['Forma','Risultati delle ultime 5 partite, con peso maggiore alle più recenti. Pesa il 20% del Metis Index.'],
+attacco:['Attacco','Quanti gol segna in media la squadra in questa stagione. Pesa il 15%.'],
+difesa:['Difesa','Combina gol subiti a partita e porte inviolate. Più è alto, meglio difende. Pesa il 15%.'],
+creazione:['Creazione','Capacità di creare gioco offensivo: gol segnati e partite con molti gol. Pesa il 15%.'],
+perf:['Performance','Punti conquistati a partita rispetto al massimo possibile (3). Pesa il 10%.'],
+ct:['Casa/Trasferta','Quanto la squadra rende sia in casa sia fuori. Pesa il 10%.'],
+eff:['Efficienza','Quota dei gol fatti sul totale dei gol di tutte le sue partite. Pesa il 5%.'],
+trend:['Trend','Differenza di punti a partita tra seconda e prima metà della stagione. Positivo = squadra in crescita. Pesa il 10%.'],
+pos:['Posizione','Posizione attuale in classifica. Meno è meglio.'],
+pt:['Punti','Punti totali in campionato nella stagione corrente.'],
+gf:['Gol fatti','Gol segnati finora in stagione.'],gs:['Gol subiti','Gol incassati finora in stagione. Meno è meglio.'],
+dr:['Differenza reti','Gol fatti meno gol subiti.'],
+gfc:['Gol fatti casa/fuori','Media gol segnati dalla squadra di casa in casa, contro quelli segnati dalla squadra ospite in trasferta.'],
+gsc:['Gol subiti casa/fuori','Media gol subiti in casa dai padroni di casa e in trasferta dagli ospiti. Meno è meglio.'],
+over:['% Over 2.5','Percentuale di partite della squadra finite con 3 o più gol totali.'],
+gg:['% Gol/Gol','Percentuale di partite in cui entrambe le squadre hanno segnato.'],
+cs:['% Clean sheet','Percentuale di partite chiuse senza subire gol.'],
+esito:['Esito','Chi è favorita secondo il Metis Index. Se le due squadre sono vicine, il match è considerato equilibrato.'],
+ou:['Over/Under','Previsione sul totale dei gol, calcolata dalle medie gol attese delle due squadre.'],
+btts:['Entrambe segnano','Previsione sulla possibilità che entrambe le squadre vadano a segno (Gol/Gol).'],
+csm:['Porta inviolata','Squadra che ha buone probabilità di non subire gol, in base alla differenza di Metis Index.'],
+h2h:['Precedenti','Storico degli scontri diretti tra le due squadre nei dati disponibili.'],
+avg:['Media gol','Media di gol totali segnati negli scontri diretti.']};
+const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',fav:'<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3"/>',games:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>',leagues:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',more:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'};
+const TABS=[['home','Home'],['fav','Preferiti'],['games','Partite'],['leagues','Campionati'],['more','Altro']];
 
-        <!-- TAB 1: HOME -->
-        <div id="section-home" class="view-section active">
-            <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInputHome" placeholder="Cerca squadra, campionato o match..." oninput="handleGlobalSearch(this.value)">
-            </div>
-            <div class="section-header">
-                <h2>Match Hub & Report Prepartita</h2>
-            </div>
-            <div id="homeMatchesContainer"><div class="empty-state">Lettura file metis_database.xlsx in corso...</div></div>
-        </div>
+async function load(file){
+ try{
+  let buf;
+  if(file)buf=await file.arrayBuffer();else{const r=await fetch('metis_database.xlsx?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;buf=await r.arrayBuffer()}
+  const wb=XLSX.read(buf,{type:'array'}),sh=n=>wb.Sheets[n]?XLSX.utils.sheet_to_json(wb.Sheets[n],{defval:''}):[];
+  const rd=wb.Sheets.README?XLSX.utils.sheet_to_json(wb.Sheets.README,{header:1}):[];SEASON=(rd[1]&&rd[1][1])||'';
+  const R=new Map(sh('Report').map(r=>[r.Campionato+'|'+r.Match,r]));
+  M=sh('Fixtures').map((f,i)=>({i,id:f.Data+'|'+f.Casa+'|'+f.Trasferta,d:String(f.Data),c:f.Campionato,h:f.Casa,a:f.Trasferta,r:R.get(f.Campionato+'|'+f.Casa+' vs '+f.Trasferta)||{}}));
+  MI=new Map(sh('MetisIndex').map(r=>[r.Squadra,r]));
+  ST=new Map(sh('StatisticheSquadra').map(r=>[r.Squadra+'|'+r.Campionato,r]));
+  CL={};CLT=new Map();sh('Classifiche').forEach(r=>{(CL[r.Campionato]??=[]).push(r);CLT.set(r.Squadra+'|'+r.Campionato,r)});
+  H2=new Map(sh('H2H').map(r=>[r.Confronto,r]));
+  LG=sh('Campionati').map(r=>r['Campionato Ufficiale']).filter(Boolean);
+  const ds=[...new Set(M.map(m=>m.d))].sort(),t=new Date().toISOString().slice(0,10);
+  if(!S.date||!ds.includes(S.date))S.date=ds.find(d=>d>=t)||ds[ds.length-1]||t;
+  S.err=false;S.upd=new Date();
+ }catch(e){if(!M.length)S.err=true}
+ render();
+}
+const probs=m=>{const x=num(m.r['Metis Index Casa']),y=num(m.r['Metis Index Trasf']);if(x==null||y==null||x+y==0)return null;const p=Math.round(100*x/(x+y));return[p,100-p]};
+const fav=m=>{const e=m.r['Esito / Chi Vince']||'';return e.includes('Casa')?'h':e.includes('Trasferta')?'a':null};
+const hi=m=>S.fav.has('m:'+m.id)||S.fav.has('t:'+m.h)||S.fav.has('t:'+m.a);
+const lrank=c=>S.fav.has('l:'+c)?-1:(i=>i<0?99:i)(PRI.indexOf(ln(c)));
+const power=m=>(num(m.r['Metis Index Casa'])||0)+(num(m.r['Metis Index Trasf'])||0);
+const STAR='<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3"/>';
+const star=k=>{const on=S.fav.has(k);return `<button class="star${on?' on':''}${on&&S.pop===k?' pop':''}" data-act="fav" data-k="${esc(k)}" aria-pressed="${on}" aria-label="Segui"><svg viewBox="0 0 24 24">${STAR}</svg></button>`};
+const bd=n=>{const w=String(n).split(/\s+/);return `<span class="bd">${esc((w.length>1?w[0][0]+w[1][0]:String(n).slice(0,3)).toUpperCase())}</span>`};
+const q=k=>`<button class="q" data-act="tip" data-k="${k}" aria-label="Spiegazione">?</button>`;
+const dfmt=d=>new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+const addDay=(d,n)=>{const t=new Date(d+'T12:00:00');t.setDate(t.getDate()+n);return t.toISOString().slice(0,10)};
+const empty=(t,b)=>`<div class="empty"><svg viewBox="0 0 100 130"><use href="#owl"/></svg><div>${t}</div>${b||''}</div>`;
 
-        <!-- TAB 2: PREFERITI -->
-        <div id="section-favorites" class="view-section">
-            <div class="section-header">
-                <h2>Squadre & Campionati Seguiti</h2>
-            </div>
-            <div id="favoritesContainer" class="grid-cards"></div>
-        </div>
+function card(m,L=true){
+ const p=probs(m),f=fav(m),tf=S.fav.has('t:'+m.h)||S.fav.has('t:'+m.a);
+ return `<article class="mc" data-act="open" data-i="${m.i}"><div class="mh"><span>${L?esc(ln(m.c)):''}${tf?'<em>Squadra seguita</em>':''}</div>
+ <div class="mt"><div class="tm">${bd(m.h)}<b class="${f=='h'?'w':''}">${esc(m.h)}</b></div><div class="vs">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="tm r"><b class="${f=='a'?'w':''}">${esc(m.a)}</b>${bd(m.a)}</div></div>
+ ${p?`<div class="pb"><i style="width:${p[0]}%" class="${f=='h'?'w':''}"></i><i style="width:${p[1]}%" class="${f=='a'?'w':''}"></i></div>`:''}
+ <div class="mf" style="display:flex;justify-content:space-between;align-items:center"><span>${f?`Favorita: <span class="w">${esc(f=='h'?m.h:m.a)}</span>`:'Match equilibrato'}</span>${star('m:'+m.id)}</div></article>`}
+function groups(ms){const g={};ms.forEach(m=>(g[m.c]??=[]).push(m));return Object.keys(g).sort((a,b)=>lrank(a)-lrank(b)||ln(a).localeCompare(ln(b))).map(c=>[c,g[c].sort((a,b)=>power(b)-power(a))])}
+function dateBar(){const n=M.filter(m=>m.d===S.date).length;return `<div class="db"><button data-act="date" data-d="-1" aria-label="Giorno precedente">‹</button><label>${dfmt(S.date)}<input id="dp" type="date" value="${S.date}"></label><button data-act="date" data-d="1" aria-label="Giorno successivo">›</button></div><div class="sh" style="margin-top:14px">${n} partite<small>${n?'ordinate per campionato':''}</small></div>`}
+function lists(ms){
+ if(!ms.length)return empty('Nessuna partita in questa data.<br>Prova un altro giorno.');
+ const top=ms.filter(hi).sort((a,b)=>power(b)-power(a)),rest=ms.filter(m=>!hi(m));
+ return (top.length?`<h2 class="sh">In evidenza<small>${top.length}</small></h2>`+top.map(m=>card(m)).join(''):`<div class="empty" style="padding:16px;margin-bottom:6px">Tocca la stella su una squadra, un campionato o una partita: la troverai qui in cima.</div>`)
+ +groups(rest).map(([c,l])=>`<h2 class="sh lg">${esc(ln(c))}${star('l:'+c)}<small>${l.length}</small></h2>`+l.map(m=>card(m,false)).join('')).join('')}
 
-        <!-- TAB 3: PARTITE (CALENDARIO) -->
-        <div id="section-matches" class="view-section">
-            <div class="section-header">
-                <h2>Calendario Partite</h2>
-            </div>
-            <div class="calendar-nav-bar">
-                <button class="cal-day-btn" onclick="offsetDate(-1)">← Giorno Prec</button>
-                <button class="cal-day-btn active" id="btnToday" onclick="selectDate('2026-10-12')">12 Ott 2026</button>
-                <button class="cal-day-btn" onclick="offsetDate(1)">Giorno Succ →</button>
-                <div class="cal-picker-wrapper" title="Scegli data">
-                    📅 <span id="calDateLabel">2026-10-12</span>
-                    <input type="date" id="datePickerInput" value="2026-10-12" onchange="onDateSelected(this.value)">
-                </div>
-            </div>
-            <div id="dailyMatchesContainer"></div>
-        </div>
+function vHome(){
+ if(S.q.trim())return vSearch();
+ const ms=M.filter(m=>m.d===S.date),top=ms.filter(hi),big=ms.filter(m=>!hi(m)&&PRI.includes(ln(m.c))).sort((a,b)=>lrank(a.c)-lrank(b.c)||power(b)-power(a)).slice(0,10);
+ const show=[...top,...big];
+ return `<h2 class="sh" style="margin-top:18px">Partite del giorno<small style="text-transform:capitalize">${dfmt(S.date)}</small></h2>`+(show.length?show.map(m=>card(m)).join(''):empty('Nessuna partita per oggi.'))+(ms.length>show.length?`<button class="btn" data-act="tab" data-t="games">Tutte le partite (${ms.length})</button>`:'');
+}
+function vSearch(){
+ const k=nm(S.q.trim()),seg=`<div class="seg">${[['t','Squadre'],['l','Campionati'],['m','Partite']].map(([a,b])=>`<button class="${S.sq==a?'on':''}" data-act="seg" data-w="sq" data-v="${a}">${b}</button>`).join('')}</div>`;
+ let h='';
+ if(S.sq=='t'){const seen=new Set(),r=[];CLT.forEach(x=>{const n=nm(x.Squadra);if(n.includes(k)&&!seen.has(x.Squadra)){seen.add(x.Squadra);r.push(x)}});
+  h=r.slice(0,40).map(x=>`<div class="row">${bd(x.Squadra)}<div class="n"><b>${esc(x.Squadra)}</b><small>${esc(ln(x.Campionato))}</small></div>${star('t:'+x.Squadra)}</div>`).join('')}
+ else if(S.sq=='l')h=LG.filter(c=>nm(ln(c)).includes(k)).map(lrow).join('');
+ else h=M.filter(m=>nm(m.h+' '+m.a+' '+ln(m.c)).includes(k)).slice(0,30).map(m=>card(m)).join('');
+ return seg+(h||empty('Nessun risultato.'));
+}
+const lrow=c=>`<div class="row cl" data-act="lg" data-c="${esc(c)}"><span class="bd">🏆</span><div class="n"><b>${esc(ln(c))}</b><small>${M.filter(m=>m.c===c).length} partite in programma</small></div>${star('l:'+c)}</div>`;
+function vFav(){
+ const seg=`<div class="seg">${[['t','Squadre'],['l','Campionati'],['m','Fissate']].map(([a,b])=>`<button class="${S.ft==a?'on':''}" data-act="seg" data-w="ft" data-v="${a}">${b}</button>`).join('')}</div>`;
+ const ks=[...S.fav].filter(x=>x[0]==S.ft).map(x=>x.slice(2));let h;
+ if(S.ft=='t')h=ks.map(t=>{const st=[...CLT.values()].find(x=>x.Squadra==t),mi=MI.get(t);return `<div class="row">${bd(t)}<div class="n"><b>${esc(t)}</b><small>${st?esc(ln(st.Campionato)):''}</small></div>${mi?`<span class="mi">${mi['Metis Index']}</span>`:''}${star('t:'+t)}</div>`}).join('');
+ else if(S.ft=='l')h=ks.map(lrow).join('');
+ else h=M.filter(m=>ks.includes(m.id)).map(m=>card(m)).join('');
+ return seg+(h||empty('Ancora nulla qui.<br>Cerca una squadra o un campionato e tocca la stella.',`<button data-act="tab" data-t="home">Vai alla ricerca</button>`));
+}
+function vLeagues(){const k=nm(S.q.trim());const l=LG.filter(c=>nm(ln(c)).includes(k)).sort((a,b)=>lrank(a)-lrank(b)||ln(a).localeCompare(ln(b)));return `<h2 class="sh" style="margin-top:18px">Campionati<small>${l.length}</small></h2>`+(l.map(lrow).join('')||empty('Nessun campionato trovato.'))}
+function vMore(){
+ const th=['light','dark','auto'],tl={light:'Chiaro',dark:'Scuro',auto:'Auto'},W=[['Forma',20],['Attacco',15],['Difesa',15],['Creazione',15],['Performance',10],['Casa/Trasferta',10],['Trend',10],['Efficienza',5]];
+ return `<h2 class="sh" style="margin-top:18px">Impostazioni</h2>
+ <div class="card"><h3>Cos'è il Metis Index</h3><p>Un indice proprietario da 0 a 100 che combina 8 fattori statistici per misurare lo stato di forma di ogni squadra e stimare chi parte favorita. Le percentuali nelle partite derivano dal confronto tra i due indici.</p><div class="chips">${W.map(w=>`<span>${w[0]} ${w[1]}%</span>`).join('')}</div><button class="btn o" data-act="tip" data-k="index">Scopri di più</button></div>
+ <div class="card"><h3>Tema</h3><div class="seg" style="margin:0">${th.map(t=>`<button class="${S.theme==t?'on':''}" data-act="theme" data-v="${t}">${tl[t]}</button>`).join('')}</div></div>
+ <div class="card"><h3>Dati</h3><p>Stagione ${esc(SEASON||'–')} · ${M.length} partite · ${CLT.size} squadre.<br>Aggiornati alle ${S.upd?S.upd.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'–'}. Il file si ricarica da solo ogni 5 minuti.</p><button class="btn" data-act="upd">Aggiorna ora</button><label class="btn o">Carica file Excel manualmente<input type="file" id="fi" accept=".xlsx" hidden></label></div>`}
 
-        <!-- TAB 4: CAMPIONATI -->
-        <div id="section-standings" class="view-section">
-            <div class="section-header">
-                <h2>Classifiche Ufficiali & Metis Index</h2>
-            </div>
-            <select id="leagueSelector" class="filter-select" onchange="renderStandingsTable()"></select>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 45px;">Pos</th>
-                            <th>Squadra</th>
-                            <th style="text-align: center;">Pt</th>
-                            <th style="text-align: center;">G</th>
-                            <th style="text-align: center;">Metis Index</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingsBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- TAB 5: ALTRO -->
-        <div id="section-more" class="view-section">
-            <div class="section-header">
-                <h2>Informazioni & Modello</h2>
-            </div>
-            <div class="info-card" onclick="openTooltip('Metis Index Engine', 'Indice calcolato automaticamente leggendo i coefficienti e le 8 sub-metriche presenti nel database Excel.')">
-                <h3>Metis Index Engine</h3>
-                <p>Modello statistico sincronizzato nativamente con il file Excel.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- VISTA DETTAGLIO PARTITA -->
-    <div id="view-match-detail">
-        <div class="detail-header-bar">
-            <button class="back-btn" onclick="closeMatchDetail()">← Torna Indietro</button>
-            <span id="detailLeagueBadge" class="match-date-badge">Campionato</span>
-        </div>
-        <div class="match-hero-card" id="matchHeroContainer"></div>
-        
-        <div class="sub-tabs">
-            <button class="sub-tab-btn active" onclick="switchDetailTab('report', this)">Report Prepartita</button>
-            <button class="sub-tab-btn" onclick="switchDetailTab('overview', this)">Panoramica Index</button>
-            <button class="sub-tab-btn" onclick="switchDetailTab('h2h', this)">Precedenti H2H</button>
-        </div>
-
-        <div id="matchDetailContentArea"></div>
-    </div>
-
-    <!-- MODALE TOOLTIP (?) -->
-    <div id="infoTooltipModal" onclick="closeTooltip(event)">
-        <div class="tooltip-card" onclick="event.stopPropagation()">
-            <button class="tooltip-close" onclick="closeTooltip()">×</button>
-            <h3 id="tooltipTitle">Titolo</h3>
-            <p id="tooltipDesc">Descrizione.</p>
-        </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="nav-bar">
-        <button class="nav-btn active" onclick="switchTab('home', this)">
-            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            Home
-        </button>
-        <button class="nav-btn" onclick="switchTab('favorites', this)">
-            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Preferiti
-        </button>
-        <button class="nav-btn" onclick="switchTab('matches', this)">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            Partite
-        </button>
-        <button class="nav-btn" onclick="switchTab('standings', this)">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-            Campionati
-        </button>
-        <button class="nav-btn" onclick="switchTab('more', this)">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Altro
-        </button>
-    </nav>
-
-    <script>
-        let dbData = {};
-        let currentDateSelected = "2026-10-12";
-        let activeMatchId = null;
-        let userFavorites = JSON.parse(localStorage.getItem('metis_favs') || '[]');
-
-        // CARICAMENTO AUTOMATICO E DINAMICO DEL FILE EXCEL INTERO
-        async function loadExcelDatabase() {
-            try {
-                let response = await fetch('metis_database.xlsx');
-                let data = await response.arrayBuffer();
-                let workbook = XLSX.read(data, { type: 'array' });
-
-                // Converte ogni foglio del file Excel in un array di oggetti JavaScript in tempo reale
-                workbook.SheetNames.forEach(sheetName => {
-                    let jsonSheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                    dbData[sheetName] = jsonSheet;
-                });
-
-                // Assegna ID univoci progressivi alle righe del Report se non presenti
-                if(dbData['Report']) {
-                    dbData['Report'] = dbData['Report'].map((r, index) => ({ id: index + 1, ...r }));
-                }
-
-                // Legge la stagione attiva dal README se presente
-                if(dbData['README'] && dbData['README'].length > 0) {
-                    let seasonRow = dbData['README'][0];
-                    let seasonVal = seasonRow['Unnamed: 1'] || seasonRow[Object.keys(seasonRow)[1]];
-                    if(seasonVal) document.getElementById('seasonLabel').textContent = `Stagione ${seasonVal}`;
-                }
-
-                renderHome();
-                if(dbData['Classifiche']) populateLeagues();
-            } catch (err) {
-                console.error("Errore nel caricamento o parsing del file Excel:", err);
-                document.getElementById('homeMatchesContainer').innerHTML = `<div class="empty-state">Impossibile leggere il file metis_database.xlsx. Assicurati che sia nella stessa cartella.</div>`;
-            }
-        }
-
-        function getTeamLogo(name) {
-            if (!name) return 'https://crests.football-data.org/default.svg';
-            return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=EAE4F5&color=8066B8&bold=true&size=64`;
-        }
-
-        function switchTab(id, btn) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            if(id === 'home') renderHome();
-            if(id === 'favorites') renderFavorites();
-            if(id === 'matches') renderDailyMatches();
-            if(id === 'standings') populateLeagues();
-        }
-
-        function renderHome() {
-            const container = document.getElementById('homeMatchesContainer');
-            container.innerHTML = '';
-
-            if(!dbData['Report'] || dbData['Report'].length === 0) {
-                container.innerHTML = `<div class="empty-state">Nessun dato trovato nel foglio Report del file Excel.</div>`;
-                return;
-            }
-
-            dbData['Report'].forEach(rep => {
-                let matchName = rep['Match'] || '';
-                let [home, away] = matchName.includes('vs') ? matchName.split('vs').map(s => s.trim()) : matchName.split('-').map(s => s.trim());
-                if(!home || !away) return;
-
-                let indexCasa = rep['Metis Index Casa'] || '-';
-                let indexTrasf = rep['Metis Index Trasf'] || '-';
-                let esito = rep['Esito / Chi Vince'] || 'N/D';
-
-                container.innerHTML += `
-                    <div class="match-card" onclick="openMatchDetail(${rep.id})">
-                        <div class="match-meta">
-                            <span>🏆 ${rep['Campionato'] || 'Campionato'}</span>
-                            <span class="match-date-badge">Stagione Attiva</span>
-                            <button class="fav-star ${userFavorites.includes(home)?'active':''}" onclick="toggleFav(event, '${home}')">★</button>
-                        </div>
-                        <div class="metis-index-showcase">
-                            <div class="metis-index-block"><div class="metis-index-label">${home}</div><div class="metis-index-number">${indexCasa}</div></div>
-                            <div style="text-align:center;"><div class="metis-index-label">Metis Index</div><div style="font-size:10px; font-weight:700; color:var(--text-muted);">Prepartita</div></div>
-                            <div class="metis-index-block"><div class="metis-index-label">${away}</div><div class="metis-index-number">${indexTrasf}</div></div>
-                        </div>
-                        <div class="match-content">
-                            <div class="team-box"><img src="${getTeamLogo(home)}" class="team-crest"><div class="team-name">${home}</div></div>
-                            <div style="text-align: center;"><span class="highlight-accent">${esito}</span></div>
-                            <div class="team-box away"><div class="team-name">${away}</div><img src="${getTeamLogo(away)}" class="team-crest"></div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderDailyMatches() {
-            const container = document.getElementById('dailyMatchesContainer');
-            container.innerHTML = '';
-            document.getElementById('calDateLabel').textContent = currentDateSelected;
-            document.getElementById('datePickerInput').value = currentDateSelected;
-
-            if(!dbData['Fixtures']) {
-                container.innerHTML = `<div class="empty-state">Nessun calendario trovato nel foglio Fixtures.</div>`;
-                return;
-            }
-
-            const matches = dbData['Fixtures'].filter(f => String(f['Data']).trim() === String(currentDateSelected).trim());
-            if(matches.length === 0) {
-                container.innerHTML = `<div class="empty-state">Nessuna partita disponibile per la data ${currentDateSelected}.</div>`;
-                return;
-            }
-
-            matches.forEach(fix => {
-                let home = fix['Casa'];
-                let away = fix['Trasferta'];
-                let camp = fix['Campionato'];
-                let rep = dbData['Report'] ? dbData['Report'].find(r => r['Match'] && r['Match'].includes(home) && r['Match'].includes(away)) : null;
-
-                container.innerHTML += `
-                    <div class="match-card" onclick="openMatchDetail(${rep ? rep.id : 1})">
-                        <div class="match-meta"><span>🏆 ${camp}</span><span class="match-date-badge">${fix['Data']}</span></div>
-                        <div class="match-content">
-                            <div class="team-box"><img src="${getTeamLogo(home)}" class="team-crest"><div class="team-name">${home}</div></div>
-                            <div style="font-weight: 800; color: var(--brand-purple);">VS</div>
-                            <div class="team-box away"><div class="team-name">${away}</div><img src="${getTeamLogo(away)}" class="team-crest"></div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function offsetDate(days) {
-            let d = new Date(currentDateSelected);
-            d.setDate(d.getDate() + days);
-            currentDateSelected = d.toISOString().split('T')[0];
-            renderDailyMatches();
-        }
-
-        function selectDate(dt) { currentDateSelected = dt; renderDailyMatches(); }
-        function onDateSelected(val) { if(val) { currentDateSelected = val; renderDailyMatches(); } }
-
-        function renderFavorites() {
-            const container = document.getElementById('favoritesContainer');
-            container.innerHTML = '';
-            if(userFavorites.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nessun preferito. Clicca sulla stella nelle partite per aggiungerli.</div>`;
-                return;
-            }
-            userFavorites.forEach(item => {
-                container.innerHTML += `
-                    <div class="card-item">
-                        <div class="card-info">
-                            <img src="${getTeamLogo(item)}" class="team-crest">
-                            <span style="font-weight: 700; font-size: 13px;">${item}</span>
-                        </div>
-                        <span style="color:var(--brand-purple); font-weight:800;">★</span>
-                    </div>
-                `;
-            });
-        }
-
-        function toggleFav(e, name) {
-            e.stopPropagation();
-            if(userFavorites.includes(name)) {
-                userFavorites = userFavorites.filter(i => i !== name);
-            } else {
-                userFavorites.push(name);
-            }
-            localStorage.setItem('metis_favs', JSON.stringify(userFavorites));
-            renderHome();
-        }
-
-        function populateLeagues() {
-            const selector = document.getElementById('leagueSelector');
-            selector.innerHTML = '';
-            if(!dbData['Classifiche']) return;
-
-            [...new Set(dbData['Classifiche'].map(c => c['Campionato']))].forEach(l => {
-                const opt = document.createElement('option');
-                opt.value = l; opt.textContent = l;
-                selector.appendChild(opt);
-            });
-            renderStandingsTable();
-        }
-
-        function renderStandingsTable() {
-            const league = document.getElementById('leagueSelector').value;
-            const tbody = document.getElementById('standingsBody');
-            tbody.innerHTML = '';
-            if(!dbData['Classifiche']) return;
-
-            dbData['Classifiche'].filter(c => c['Campionato'] === league).forEach(r => {
-                let squadra = r['Squadra'];
-                let miObj = dbData['MetisIndex'] ? dbData['MetisIndex'].find(m => m['Squadra'] === squadra) : null;
-                let indexVal = miObj ? miObj['Metis Index'] : '-';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight: 800; color: var(--brand-purple);">${r['Posizione']}</td>
-                        <td><div style="display:flex; align-items:center; gap:8px; font-weight:700;"><img src="${getTeamLogo(squadra)}" style="width:22px; height:22px;"><span>${squadra}</span></div></td>
-                        <td style="text-align: center; font-weight: 800;">${r['Punti']}</td>
-                        <td style="text-align: center;">${r['Giocate']}</td>
-                        <td style="text-align: center;"><span class="badge-pill">${indexVal}</span></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function openMatchDetail(id) {
-            activeMatchId = id;
-            const r = dbData['Report'].find(item => item.id === id);
-            if(!r) return;
-            let matchName = r['Match'] || '';
-            let [home, away] = matchName.includes('vs') ? matchName.split('vs').map(s => s.trim()) : matchName.split('-').map(s => s.trim());
-
-            document.getElementById('detailLeagueBadge').textContent = r['Campionato'] || 'Campionato';
-            document.getElementById('matchHeroContainer').innerHTML = `
-                <div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Report Ufficiale Excel</div>
-                <div class="hero-teams">
-                    <div class="hero-team-block"><img src="${getTeamLogo(home)}"><span>${home}</span></div>
-                    <div style="font-weight: 800; color: var(--brand-purple);">VS</div>
-                    <div class="hero-team-block"><img src="${getTeamLogo(away)}"><span>${away}</span></div>
-                </div>
-            `;
-            switchDetailTab('report');
-            document.getElementById('view-match-detail').style.display = 'block';
-        }
-
-        function closeMatchDetail() { document.getElementById('view-match-detail').style.display = 'none'; }
-
-        function switchDetailTab(tabName) {
-            document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-            event && event.target && event.target.classList.add('active');
-            const area = document.getElementById('matchDetailContentArea');
-            const r = dbData['Report'].find(item => item.id === activeMatchId);
-            if(!r) return;
-            let matchName = r['Match'] || '';
-            let [home, away] = matchName.includes('vs') ? matchName.split('vs').map(s => s.trim()) : matchName.split('-').map(s => s.trim());
-
-            if(tabName === 'report') {
-                area.innerHTML = `
-                    <div class="section-header" style="margin-top:16px;"><h2>Indicazioni Report Prepartita</h2></div>
-                    <div class="stat-row-card"><div class="stat-info-header"><span>Esito / Chi Vince</span><span class="highlight-accent">${r['Esito / Chi Vince'] || '-'}</span></div></div>
-                    <div class="stat-row-card"><div class="stat-info-header"><span>Over/Under 2.5</span><span>${r['Over/Under 2.5'] || '-'}</span></div></div>
-                    <div class="stat-row-card"><div class="stat-info-header"><span>Entrambe Segnano (BTTS)</span><span>${r['Entrambe Segnano (BTTS)'] || '-'}</span></div></div>
-                    <div class="stat-row-card"><div class="stat-info-header"><span>Clean Sheet</span><span>${r['Clean Sheet (Porta Inviolata)'] || '-'}</span></div></div>
-                `;
-            } else if(tabName === 'overview') {
-                area.innerHTML = `
-                    <div class="info-card" style="margin-top:16px;">
-                        <h3>Metis Index & Componenti</h3>
-                        <p><b>${home}:</b> ${r['Metis Index Casa'] || '-'} &nbsp;|&nbsp; <b>${away}:</b> ${r['Metis Index Trasf'] || '-'}</p>
-                    </div>
-                `;
-            } else {
-                let h2h = dbData['H2H'] ? dbData['H2H'].find(h => h['Confronto'] && h['Confronto'].includes(home) && h['Confronto'].includes(away)) : null;
-                area.innerHTML = `
-                    <div class="info-card" style="margin-top:16px;">
-                        <h3>Precedenti Diretti (H2H)</h3>
-                        <p>Incontri totali: <b>${h2h ? h2h['Match Totali'] : '-'}</b></p>
-                        <p>Vittorie ${home}: <b>${h2h ? h2h['Vittorie A'] : '-'}</b> | Pareggi: <b>${h2h ? h2h['Pareggi'] : '-'}</b> | Vittorie ${away}: <b>${h2h ? h2h['Vittorie B'] : '-'}</b></p>
-                        <p style="margin-top:4px;">Media gol totali: <b>${h2h ? h2h['Media Gol Totali'] : '-'}</b></p>
-                    </div>
-                `;
-            }
-        }
-
-        function openTooltip(title, desc) {
-            document.getElementById('tooltipTitle').textContent = title;
-            document.getElementById('tooltipDesc').textContent = desc;
-            document.getElementById('infoTooltipModal').style.display = 'flex';
-        }
-
-        function closeTooltip(e) {
-            if(!e || e.target.id === 'infoTooltipModal' || e.target.classList.contains('tooltip-close')) {
-                document.getElementById('infoTooltipModal').style.display = 'none';
-            }
-        }
-
-        function handleGlobalSearch(query) {
-            const q = query.toLowerCase();
-            document.querySelectorAll('#homeMatchesContainer .match-card').forEach(card => {
-                card.style.display = card.innerText.toLowerCase().includes(q) ? 'block' : 'none';
-            });
-        }
-
-        // Avvio caricamento dinamico del file Excel all'avvio della pagina
-        loadExcelDatabase();
-    </script>
+function vOv(){
+ const o=S.ov;if(!o)return '';
+ if(o.t=='l'){const c=o.c,ms=M.filter(m=>m.c===c),ds=[...new Set(ms.map(m=>m.d))].sort();
+  return `<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(c))}</h1>${star('l:'+c)}</div><div class="seg"><button class="${o.tab=='g'?'on':''}" data-act="ovt" data-v="g">Partite</button><button class="${o.tab=='c'?'on':''}" data-act="ovt" data-v="c">Classifica</button></div>`+
+  (o.tab=='g'?(ds.map(d=>`<div class="dh">${dfmt(d)}</div>`+ms.filter(m=>m.d==d).sort((a,b)=>power(b)-power(a)).map(m=>card(m,false)).join('')).join('')||empty('Nessuna partita in programma.'))
+  :`<div class="card"><table><tr><th>#</th><th style="text-align:left">Squadra</th><th>Pt</th><th>G</th><th>DR</th><th>Metis${q('index')}</th></tr>${(CL[c]||[]).map(r=>`<tr><td class="p">${r.Posizione}</td><td class="t">${esc(r.Squadra)}</td><td class="p">${r.Punti}</td><td>${r.Giocate}</td><td>${r['Diff Reti']}</td><td><span class="mi">${(MI.get(r.Squadra)||{})['Metis Index']??'–'}</span></td></tr>`).join('')}</table></div>`);}
+ const m=M[o.i],p=probs(m),f=fav(m),r=m.r,A=MI.get(m.h)||{},B=MI.get(m.a)||{};
+ let b=`<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(m.c))}<div style="font-size:11px;color:var(--mu);font-weight:600;text-transform:capitalize">${dfmt(m.d)}</div></h1>${star('m:'+m.id)}</div>
+ <div class="hero"><div class="ht"><div class="t">${bd(m.h)}<span class="${f=='h'?'w':''}">${esc(m.h)}</span>${star('t:'+m.h)}</div><div class="big">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="t">${bd(m.a)}<span class="${f=='a'?'w':''}">${esc(m.a)}</span>${star('t:'+m.a)}</div></div>
+ <p style="color:var(--mu);font-size:12.5px">${f?`<b class="w">${esc(f=='h'?m.h:m.a)}</b> è favorita secondo il Metis Index`:'Per il Metis Index il match è equilibrato'}${q('index')}</p></div>
+ <div class="seg">${[['p','Panoramica'],['s','Statistiche'],['h','H2H']].map(([a,l])=>`<button class="${o.tab==a?'on':''}" data-act="ovt" data-v="${a}">${l}</button>`).join('')}</div>`;
+ if(o.tab=='p'){
+  const mk=(l,k,v)=>{v=v||'–';const pos=/^(Over|S[ìi]|Vittoria|.*Probabile)/.test(v);return `<div class="mk"><span>${l}${q(k)}</span><span class="${pos?'w':''}">${esc(v)}</span></div>`};
+  b+=`<div class="card"><h3>Mercati e previsioni</h3>${mk('Esito','esito',r['Esito / Chi Vince'])}${mk('Over/Under 1.5','ou',r['Over/Under 1.5'])}${mk('Over/Under 2.5','ou',r['Over/Under 2.5'])}${mk('Over/Under 3.5','ou',r['Over/Under 3.5'])}${mk('Over/Under 4.5','ou',r['Over/Under 4.5'])}${mk('Entrambe segnano','btts',r['Entrambe Segnano (BTTS)'])}${mk('Porta inviolata','csm',r['Clean Sheet (Porta Inviolata)'])}</div>`;
+ }else if(o.tab=='s'){
+  const sa=ST.get(m.h+'|'+m.c)||{},sb=ST.get(m.a+'|'+m.c)||{},ca=CLT.get(m.h+'|'+m.c)||{},cb=CLT.get(m.a+'|'+m.c)||{};
+  const sr=(l,k,x,y,lo)=>{const a=num(x),c=num(y);if(a==null||c==null)return '';const w=a==c?0:((a>c)!==!!lo?1:2),mn=Math.min(a,c,0),X=a-mn,Y=c-mn,sh=X+Y==0?50:Math.round(100*(lo?Y:X)/(X+Y));return `<div class="sr"><div class="v ${w==1?'w':''}">${esc(x)}</div><div class="l">${l}${q(k)}</div><div class="v r ${w==2?'w':''}">${esc(y)}</div><div class="bar"><i class="${w==1?'w':''}" style="width:${sh}%"></i><i class="${w==2?'w':''}" style="width:${100-sh}%"></i></div></div>`};
+  const gh=`<div class="gh"><span>${esc(m.h)}</span><span>${esc(m.a)}</span></div>`;
+  const C=[['Forma','forma','Forma (20%)'],['Attacco','attacco','Attacco (15%)'],['Difesa','difesa','Difesa (15%)'],['Creazione','creazione','Creazione (15%)'],['Performance','perf','Performance (10%)'],['Casa/Trasferta','ct','Casa/Trasferta (10%)'],['Efficienza','eff','Efficienza (5%)'],['Trend','trend','Trend (10%)']];
+  b+=`<div class="card"><h3>Metis Index</h3>${gh}${sr('Metis Index','index',A['Metis Index'],B['Metis Index'])}${C.map(c=>sr(c[0],c[1],A[c[2]],B[c[2]])).join('')}</div>
+  <div class="card"><h3>Stagione ${esc(SEASON)}</h3>${gh}${sr('Posizione','pos',ca.Posizione,cb.Posizione,1)}${sr('Punti','pt',ca.Punti,cb.Punti)}${sr('Gol fatti','gf',ca['Gol Fatti'],cb['Gol Fatti'])}${sr('Gol subiti','gs',ca['Gol Subiti'],cb['Gol Subiti'],1)}${sr('Diff. reti','dr',ca['Diff Reti'],cb['Diff Reti'])}${sr('Gol fatti casa/fuori','gfc',sa['Media GF Casa'],sb['Media GF Fuori'])}${sr('Gol subiti casa/fuori','gsc',sa['Media GS Casa'],sb['Media GS Fuori'],1)}${sr('% Over 2.5','over',sa['% Over 2.5'],sb['% Over 2.5'])}${sr('% Gol/Gol','gg',sa['% Gol/Gol'],sb['% Gol/Gol'])}${sr('% Clean sheet','cs',sa['% Clean Sheet'],sb['% Clean Sheet'])}</div>`;
+ }else{
+  let x=H2.get(m.h+' vs '+m.a),y;if(x)y={n:x['Match Totali'],a:x['Vittorie A'],d:x.Pareggi,b:x['Vittorie B'],g:x['Media Gol Totali']};else if(x=H2.get(m.a+' vs '+m.h))y={n:x['Match Totali'],a:x['Vittorie B'],d:x.Pareggi,b:x['Vittorie A'],g:x['Media Gol Totali']};
+  b+=y?`<div class="card"><h3>Scontri diretti${q('h2h')}</h3><div class="gh"><span class="${y.a>y.b?'w':''}">${esc(m.h)} ${y.a}</span><span>Pari ${y.d}</span><span class="${y.b>y.a?'w':''}">${y.b} ${esc(m.a)}</span></div><div class="bar" style="height:8px"><i class="${y.a>y.b?'w':''}" style="flex:${y.a||.1}"></i><i style="flex:${y.d||.1};opacity:.25"></i><i class="${y.b>y.a?'w':''}" style="flex:${y.b||.1}"></i></div>
+  <div class="mk" style="margin-top:8px"><span>Precedenti totali</span><span>${y.n}</span></div><div class="mk"><span>Media gol${q('avg')}</span><span>${esc(y.g)}</span></div></div>`:empty('Nessun precedente nei dati disponibili.');
+ }
+ return b;
+}
+function render(){
+ $('#nav').innerHTML=TABS.map(([k,l])=>`<button class="${S.tab==k?'on':''}" data-act="tab" data-t="${k}"><svg viewBox="0 0 24 24">${IC[k]}</svg>${l}</button>`).join('');
+ $('#sb').style.display=(S.tab=='home'||S.tab=='leagues')?'':'none';
+ $('#q').placeholder=S.tab=='home'?'Cerca squadra, campionato o partita…':'Cerca un campionato…';
+ let v;
+ if(S.err)v=empty('Non riesco a leggere <b>metis_database.xlsx</b>.<br>Mettilo nella stessa cartella di questa pagina (e apri la pagina da un server), oppure caricalo a mano.','<label class="btn">Carica il file Excel<input type="file" id="fi" accept=".xlsx" hidden></label>');
+ else if(!M.length)v=empty('Carico i dati…');
+ else v=S.tab=='home'?vHome():S.tab=='fav'?vFav():S.tab=='games'?dateBar()+lists(M.filter(m=>m.d===S.date)):S.tab=='leagues'?vLeagues():vMore();
+ $('#view').innerHTML=v;
+ const o=$('#ov'),st=o.scrollTop;o.classList.toggle('show',!!S.ov);if(S.ov){$('#ovc').innerHTML=vOv();o.scrollTop=st}
+ document.body.style.overflow=S.ov?'hidden':'';S.pop=null;
+}
+function anim(){const o=$('#ov');o.classList.remove('anim');void o.offsetWidth;o.classList.add('anim');o.scrollTop=0}
+function applyTheme(){const d=S.theme=='dark'||(S.theme=='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.t=d?'d':'l'}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-act]');if(!b)return;const d=b.dataset;
+ switch(d.act){
+  case 'fav':{const k=d.k;S.fav.has(k)?S.fav.delete(k):(S.fav.add(k),S.pop=k);lss('metis.fav',JSON.stringify([...S.fav]));break}
+  case 'open':S.ov={t:'m',i:+d.i,tab:'p'};render();anim();return;
+  case 'lg':S.ov={t:'l',c:d.c,tab:'g'};render();anim();return;
+  case 'close':S.ov=null;break;
+  case 'ovt':S.ov.tab=d.v;break;
+  case 'tab':S.tab=d.t;S.ov=null;S.q='';$('#q').value='';scrollTo(0,0);break;
+  case 'seg':S[d.w]=d.v;break;
+  case 'date':S.date=addDay(S.date,+d.d);break;
+  case 'theme':S.theme=d.v;lss('metis.theme',d.v);applyTheme();break;
+  case 'upd':load();return;
+  case 'tip':{const t=TIP[d.k];$('#tt').textContent=t[0];$('#td').textContent=t[1]+(d.k=='index'?' Il modello ricalcola l\'indice ogni volta che il file dati viene aggiornato.':'');$('#tip').classList.add('show');return}
+  case 'tipx':$('#tip').classList.remove('show');return;
+ }
+ render();
+});
+$('#tip').addEventListener('click',e=>{if(e.target.id=='tip')$('#tip').classList.remove('show')});
+document.addEventListener('change',e=>{
+ if(e.target.id=='dp'&&e.target.value){S.date=e.target.value;render()}
+ if(e.target.id=='fi'&&e.target.files[0])load(e.target.files[0]);
+});
+$('#q').addEventListener('input',e=>{S.q=e.target.value;render()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.upd&&Date.now()-S.upd>6e4)load()});
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',applyTheme);
+setInterval(()=>load(),3e5);
+applyTheme();render();load();
+</script>
 </body>
 </html>
