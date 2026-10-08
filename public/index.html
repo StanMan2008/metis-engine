@@ -28,20 +28,20 @@ header svg{width:30px;height:39px}
 .sh{display:flex;align-items:center;gap:8px;margin:22px 0 10px;font-size:15px;font-weight:800;color:var(--vd)}
 .sh small{margin-left:auto;font-size:11px;color:var(--mu);font-weight:700}
 .sh .star{margin-left:auto}.sh .star+small{margin-left:0}
-.lg{padding-top:2px;border-top:2px solid var(--v);padding-top:10px}
-.mc{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:12px 14px 12px;margin-bottom:10px;cursor:pointer;transition:transform .15s}
+.lg{border-top:2px solid var(--v);padding-top:10px}
+.mc{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:transform .15s}
 .mc:active{transform:scale(.985)}
 .mh{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--mu);min-height:26px}
 .mh em{font-style:normal;background:var(--lav);color:var(--vd);padding:2px 8px;border-radius:20px;margin-left:6px;font-size:10px}
 .mt{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:6px 0 10px}
-.tm{display:flex;align-items:center;gap:8px;min-width:0}.tm.r{justify-content:flex-end;text-align:right}
+.tm{display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer}.tm.r{justify-content:flex-end;text-align:right}
 .tm b{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
-.w{color:var(--o)!important}b.w{text-transform:uppercase;font-size:14.5px;font-weight:800}
+.w{color:var(--o)!important}b.w{text-transform:uppercase;font-weight:800}
 .vs{display:flex;gap:4px;align-items:baseline;font-weight:800;font-size:20px;color:var(--vd)}.vs i{font-style:normal;color:var(--mu);font-size:14px}
 .vs span.w{font-size:23px}
 .bd{flex:none;width:34px;height:34px;border-radius:50%;background:var(--lav);color:var(--vd);display:grid;place-items:center;font-size:11px;font-weight:800;border:1.5px solid var(--v)}
 .pb{display:flex;gap:3px;height:6px}.pb i{background:var(--v);border-radius:4px}.pb i.w{background:var(--o)}
-.mf{font-size:11px;color:var(--mu);margin-top:8px;font-weight:600}.mf .w{font-weight:800;text-transform:uppercase}
+.mf{font-size:11px;color:var(--mu);margin-top:8px;font-weight:600;display:flex;justify-content:space-between;align-items:center}.mf .w{font-weight:800;text-transform:uppercase}
 .star{flex:none;width:32px;height:32px;display:grid;place-items:center}
 .star svg{width:24px;height:24px;overflow:visible}
 .star polygon{fill:var(--card);stroke:var(--v);stroke-width:1.8;stroke-linejoin:round;transition:fill .2s}
@@ -56,12 +56,11 @@ header svg{width:30px;height:39px}
 .db button{width:44px;font-size:22px;color:var(--v);font-weight:700}
 .db label{flex:1;display:grid;place-items:center;font-weight:800;color:var(--vd);position:relative;text-transform:capitalize}
 .db input{position:absolute;inset:0;opacity:0;width:100%}
-.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
 .row .n{flex:1;min-width:0}.row b{display:block;font-weight:700}.row small{color:var(--mu);font-size:11.5px}
-.row.cl{cursor:pointer}
 .mi{background:var(--v);color:#fff;border-radius:8px;padding:3px 8px;font-weight:800;font-size:12px}
-.empty{text-align:center;color:var(--mu);padding:34px 20px;background:var(--card);border:1px dashed var(--ln);border-radius:18px;font-weight:600}
-.empty svg{width:56px;margin-bottom:8px}.empty button{margin-top:12px;background:var(--v);color:#fff;padding:9px 18px;border-radius:12px;font-weight:700}
+.empty{text-align:center;color:var(--mu);padding:34px 20px;background:var(--card);border:1px dashed var(--ln);border-radius:18px;font-weight:600;margin-bottom:12px}
+.empty svg{width:56px;margin-bottom:8px}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
 nav .wrap{display:flex;justify-content:space-around;padding:6px 0}
 nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--mu);padding:6px 10px;border-radius:12px;min-width:58px}
@@ -73,10 +72,12 @@ nav button.on{color:var(--vd);font-weight:800}nav button.on svg{stroke:var(--v);
 .top{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 10px) 0 6px}
 .top .bk{width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--ln);font-size:20px;color:var(--vd)}
 .top h1{flex:1;font-size:16px;font-weight:800;color:var(--vd)}
-.hero{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:16px;margin-top:8px;text-align:center}
+.hero{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:16px;margin:8px 0 4px;text-align:center}
+.hero p{color:var(--mu);font-size:12.5px}
 .hero .ht{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:start;margin:14px 0 4px}
-.hero .t{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800}
-.hero .bd{width:58px;height:58px;font-size:17px}.hero .big{font-size:34px;font-weight:800;color:var(--vd);padding-top:10px;display:flex;gap:6px}.hero .big i{font-style:normal;color:var(--mu)}
+.hero .t{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;cursor:pointer}
+.hero .bd{width:58px;height:58px;font-size:17px}
+.hero .big{font-size:34px;font-weight:800;color:var(--vd);display:flex;gap:6px;justify-content:center;align-items:baseline}.hero .big i{font-style:normal;color:var(--mu)}
 .hero .big .w{font-size:38px}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:14px 16px;margin-bottom:12px}
 .card h3{font-size:14px;font-weight:800;color:var(--vd);display:flex;align-items:center;gap:6px;margin-bottom:8px}
@@ -87,18 +88,19 @@ nav button.on{color:var(--vd);font-weight:800}nav button.on svg{stroke:var(--v);
 .mk .w{text-transform:uppercase;font-size:12.5px;font-weight:800}
 .gh{display:flex;justify-content:space-between;font-weight:800;font-size:12px;color:var(--vd);margin:4px 0 6px}
 .sr{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;padding:9px 0;border-bottom:1px solid var(--ln);row-gap:6px}
-.sr:last-child{border:0}.sr .v{font-weight:700;font-size:14px}.sr .v.r{text-align:right}.sr .v.w{font-size:16px;font-weight:800;text-transform:uppercase}
+.sr:last-child{border:0}.sr .v{font-weight:700;font-size:14px}.sr .v.r{text-align:right}.sr .v.w{font-size:16px;font-weight:800}
 .sr .l{text-align:center;font-size:12px;color:var(--mu);font-weight:600}
 .bar{grid-column:1/-1;display:flex;gap:3px;height:5px}.bar i{background:var(--v);border-radius:3px;opacity:.55}.bar i.w{background:var(--o);opacity:1}
+.cmp{height:8px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{font-size:10px;color:var(--mu);text-align:center;padding:6px 3px;font-weight:700}td{padding:8px 3px;text-align:center;border-top:1px solid var(--ln)}
-td.t{text-align:left;font-weight:700}td.p{color:var(--vd);font-weight:800}
+td.t{text-align:left;font-weight:700;cursor:pointer;text-decoration:underline}td.p{color:var(--vd);font-weight:800}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chips span{background:var(--lav);color:var(--vd);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
-.btn{display:block;width:100%;background:var(--v);color:#fff;font-weight:700;padding:12px;border-radius:12px;margin-top:12px;text-align:center}
+.btn{display:block;width:100%;background:var(--v);color:#fff;font-weight:700;padding:12px;border-radius:12px;margin-top:12px;text-align:center;cursor:pointer}
 .btn.o{background:var(--lav);color:var(--vd)}
 #tip{position:fixed;inset:0;z-index:60;background:#14101e66;backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;padding:16px}
 #tip.show{display:flex}
-#tip div{background:var(--card);border-radius:22px;padding:22px;max-width:480px;width:100%;animation:up .25s}
+#tip>div{background:var(--card);border-radius:22px;padding:22px;max-width:480px;width:100%;animation:up .25s}
 #tip h3{color:var(--vd);font-size:17px;margin-bottom:8px}#tip p{color:var(--mu);line-height:1.6}
 .dh{font-size:12px;font-weight:800;color:var(--mu);margin:14px 0 8px;text-transform:capitalize}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -124,183 +126,217 @@ td.t{text-align:left;font-weight:700}td.p{color:var(--vd);font-weight:800}
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>{const n=parseFloat(String(v??'').replace('%','').replace(',','.'));return isNaN(n)?null:n};
-const ln=c=>String(c).replace(/\s*\d{4}$/,''),nm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const ln=c=>String(c||'').replace(/\s*\d{4}$/,''),nm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const lsg=k=>{try{return localStorage.getItem(k)}catch{return null}},lss=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
-/* ===== CONFIGURAZIONE DATI =====
-   GITHUB_RAW: link "raw" del tuo Excel su GitHub (repo pubblico), es.
-   'https://raw.githubusercontent.com/TUO-UTENTE/TUO-REPO/main/data/metis_database.xlsx'
-   Se lo compili, l'app legge i dati direttamente da GitHub (si aggiornano dopo ogni push,
-   senza aspettare il deploy di Vercel). Lascialo vuoto per usare solo i file del sito. */
-const GITHUB_RAW='';
-const SOURCES=[GITHUB_RAW,'metis_database.xlsx','data/metis_database.xlsx','/metis_database.xlsx','/data/metis_database.xlsx'].filter(Boolean);
+const SOURCES=['metis_database.xlsx','data/metis_database.xlsx','./metis_database.xlsx','/metis_database.xlsx','/data/metis_database.xlsx'];
 const PRI=['Serie A','Premier League','La Liga','Bundesliga','Ligue 1','Serie B','Championship','Eredivisie Olanda','Liga Portugal'];
-const S={tab:'home',date:null,q:'',sq:'t',ft:'t',fav:new Set(JSON.parse(lsg('metis.fav')||'[]')),ov:null,pop:null,theme:lsg('metis.theme')||'auto',err:false,upd:null};
+let favInit=[];try{favInit=JSON.parse(lsg('metis.fav')||'[]')}catch{}
+const S={tab:'home',date:null,q:'',sq:'t',ft:'t',fav:new Set(favInit),ov:null,hist:[],pop:null,theme:lsg('metis.theme')||'auto',err:false,upd:null};
 let M=[],MI=new Map(),ST=new Map(),CL={},CLT=new Map(),H2=new Map(),LG=[],SEASON='';
 const TIP={
-index:['Metis Index','Punteggio da 0 a 100 che riassume lo stato di una squadra combinando forma, attacco, difesa e altri 5 fattori. Più è alto, più la squadra è in salute.'],
-forma:['Forma','Risultati delle ultime 5 partite, con peso maggiore alle più recenti. Pesa il 20% del Metis Index.'],
-attacco:['Attacco','Quanti gol segna in media la squadra in questa stagione. Pesa il 15%.'],
-difesa:['Difesa','Combina gol subiti a partita e porte inviolate. Più è alto, meglio difende. Pesa il 15%.'],
-creazione:['Creazione','Capacità di creare gioco offensivo: gol segnati e partite con molti gol. Pesa il 15%.'],
-perf:['Performance','Punti conquistati a partita rispetto al massimo possibile (3). Pesa il 10%.'],
-ct:['Casa/Trasferta','Quanto la squadra rende sia in casa sia fuori. Pesa il 10%.'],
-eff:['Efficienza','Quota dei gol fatti sul totale dei gol di tutte le sue partite. Pesa il 5%.'],
-trend:['Trend','Differenza di punti a partita tra seconda e prima metà della stagione. Positivo = squadra in crescita. Pesa il 10%.'],
-pos:['Posizione','Posizione attuale in classifica. Meno è meglio.'],
-pt:['Punti','Punti totali in campionato nella stagione corrente.'],
-gf:['Gol fatti','Gol segnati finora in stagione.'],gs:['Gol subiti','Gol incassati finora in stagione. Meno è meglio.'],
-dr:['Differenza reti','Gol fatti meno gol subiti.'],
-gfc:['Gol fatti casa/fuori','Media gol segnati dalla squadra di casa in casa, contro quelli segnati dalla squadra ospite in trasferta.'],
-gsc:['Gol subiti casa/fuori','Media gol subiti in casa dai padroni di casa e in trasferta dagli ospiti. Meno è meglio.'],
-over:['% Over 2.5','Percentuale di partite della squadra finite con 3 o più gol totali.'],
-gg:['% Gol/Gol','Percentuale di partite in cui entrambe le squadre hanno segnato.'],
-cs:['% Clean sheet','Percentuale di partite chiuse senza subire gol.'],
-esito:['Esito','Chi è favorita secondo il Metis Index. Se le due squadre sono vicine, il match è considerato equilibrato.'],
-ou:['Over/Under','Previsione sul totale dei gol, calcolata dalle medie gol attese delle due squadre.'],
-btts:['Entrambe segnano','Previsione sulla possibilità che entrambe le squadre vadano a segno (Gol/Gol).'],
-csm:['Porta inviolata','Squadra che ha buone probabilità di non subire gol, in base alla differenza di Metis Index.'],
-h2h:['Precedenti','Storico degli scontri diretti tra le due squadre nei dati disponibili.'],
-avg:['Media gol','Media di gol totali segnati negli scontri diretti.']};
+index:['Metis Index','Punteggio da 0 a 100 che riassume lo stato di una squadra combinando 8 fattori.'],
+forma:['Forma','Risultati delle ultime 5 partite, con più peso alle più recenti.'],
+attacco:['Attacco','Media gol segnati a partita.'],
+difesa:['Difesa','Media gol subiti e porte inviolate.'],
+creazione:['Creazione','Capacità offensiva: gol e partite con molti gol.'],
+perf:['Performance','Punti conquistati a partita.'],
+ct:['Casa/Trasferta','Equilibrio di rendimento tra casa e trasferta.'],
+eff:['Efficienza','Quota dei gol fatti sul totale dei gol delle sue partite.'],
+trend:['Trend','Crescita o calo di rendimento: seconda metà di stagione contro la prima.'],
+esito:['Esito','Squadra favorita in base al confronto tra i due Metis Index.'],
+ou:['Over/Under','Previsione sul totale dei gol, basata sulle medie delle due squadre.'],
+btts:['Entrambe Segnano','Previsione che entrambe le squadre segnino almeno un gol.'],
+csm:['Porta Inviolata','Squadra con più probabilità di non subire gol.'],
+h2h:['Scontri Diretti','Storico dei precedenti tra le due squadre.'],
+avg:['Media Gol','Media dei gol totali negli scontri diretti.'],
+pos:['Posizione','Posizione in classifica; più è bassa, meglio è.'],
+pt:['Punti','Punti in classifica.'],gf:['Gol fatti','Gol segnati in stagione.'],gs:['Gol subiti','Gol subiti in stagione.'],dr:['Differenza reti','Gol fatti meno gol subiti.'],
+gfc:['Gol fatti casa/fuori','Media gol segnati: la prima squadra in casa, la seconda in trasferta.'],gsc:['Gol subiti casa/fuori','Media gol subiti: la prima squadra in casa, la seconda in trasferta.'],
+over:['% Over 2.5','Percentuale di partite con almeno 3 gol.'],gg:['% Gol/Gol','Percentuale di partite in cui entrambe hanno segnato.'],cs:['% Clean sheet','Percentuale di partite senza subire gol.']
+};
 const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',fav:'<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3"/>',games:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>',leagues:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',more:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'};
 const TABS=[['home','Home'],['fav','Preferiti'],['games','Partite'],['leagues','Campionati'],['more','Altro']];
 
 async function load(file){
  try{
   let buf;
-  if(file)buf=await file.arrayBuffer();else{
+  if(file)buf=await file.arrayBuffer();
+  else{
    let r=null;
-   for(const u of SOURCES){try{const x=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(x.ok&&!/text\/html/.test(x.headers.get('content-type')||'')){r=x;break}}catch{}}
-   if(!r)throw 0;buf=await r.arrayBuffer()}
+   for(const u of SOURCES){
+    try{const x=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(x.ok&&!/text\/html/.test(x.headers.get('content-type')||'')){r=x;break}}catch{}
+   }
+   if(!r)throw new Error('download');
+   buf=await r.arrayBuffer();
+  }
   const wb=XLSX.read(buf,{type:'array'}),sh=n=>wb.Sheets[n]?XLSX.utils.sheet_to_json(wb.Sheets[n],{defval:''}):[];
-  const rd=wb.Sheets.README?XLSX.utils.sheet_to_json(wb.Sheets.README,{header:1}):[];SEASON=(rd[1]&&rd[1][1])||'';
+  const rd=wb.Sheets.README?XLSX.utils.sheet_to_json(wb.Sheets.README,{header:1}):[];
+  SEASON=(rd[0]&&rd[0][1])||'';
   const R=new Map(sh('Report').map(r=>[r.Campionato+'|'+r.Match,r]));
-  M=sh('Fixtures').map((f,i)=>({i,id:f.Data+'|'+f.Casa+'|'+f.Trasferta,d:String(f.Data),t:String(f.Ora||'').slice(0,5),c:f.Campionato,h:f.Casa,a:f.Trasferta,r:R.get(f.Campionato+'|'+f.Casa+' vs '+f.Trasferta)||{}}));
+  M=sh('Fixtures').map((f,i)=>({i,id:f.Data+'|'+f.Casa+'|'+f.Trasferta,d:String(f.Data||''),t:String(f.Ora||'').slice(0,5),c:f.Campionato||'',h:f.Casa||'',a:f.Trasferta||'',r:R.get(f.Campionato+'|'+f.Casa+' vs '+f.Trasferta)||{}}));
   MI=new Map(sh('MetisIndex').map(r=>[r.Squadra,r]));
-  ST=new Map(sh('StatisticheSquadra').map(r=>[r.Squadra+'|'+r.Campionato,r]));
-  CL={};CLT=new Map();sh('Classifiche').forEach(r=>{(CL[r.Campionato]??=[]).push(r);CLT.set(r.Squadra+'|'+r.Campionato,r)});
+  ST=new Map(sh('StatisticheSquadra').map(r=>[r.Squadra,r]));
+  CL={};CLT=new Map();
+  sh('Classifiche').forEach(r=>{if(r.Campionato){(CL[r.Campionato]??=[]).push(r);if(r.Squadra)CLT.set(r.Squadra,r)}});
   H2=new Map(sh('H2H').map(r=>[r.Confronto,r]));
-  LG=sh('Campionati').map(r=>r['Campionato Ufficiale']).filter(Boolean);
+  LG=sh('Campionati').map(r=>r['Campionato Ufficiale']||r.Campionato).filter(Boolean);
+  
   const ds=[...new Set(M.map(m=>m.d))].sort(),t=new Date().toISOString().slice(0,10);
-  if(!S.date||!ds.includes(S.date))S.date=ds.find(d=>d>=t)||ds[ds.length-1]||t;
+  if(!S.date||!ds.includes(S.date))S.date=ds.length? (ds.find(d=>d>=t)||ds[ds.length-1]) : t;
   S.err=false;S.upd=new Date();
- }catch(e){if(!M.length)S.err=true}
+ }catch(e){
+  // IMPORTANTE: Se non ci sono partite in calendario (M.length == 0),
+  // l'app non deve morire se ci sono almeno delle squadre salvate in MI!
+  console.error(e);
+  if(!M.length && !MI.size) S.err=true;
+ }
  render();
 }
-const probs=m=>{const x=num(m.r['Metis Index Casa']),y=num(m.r['Metis Index Trasf']);if(x==null||y==null||x+y==0)return null;const p=Math.round(100*x/(x+y));return[p,100-p]};
-const fav=m=>{const e=m.r['Esito / Chi Vince']||'';return e.includes('Casa')?'h':e.includes('Trasferta')?'a':null};
+
+const probs=m=>{const x=num((m.r||{})['Metis Index Casa']),y=num((m.r||{})['Metis Index Trasf']);if(x==null||y==null||x+y===0)return null;const p=Math.round(100*x/(x+y));return[p,100-p]};
+const fav=m=>{const e=(m.r||{})['Esito / Chi Vince']||'';return e.includes('Casa')?'h':e.includes('Trasferta')?'a':null};
 const hi=m=>S.fav.has('m:'+m.id)||S.fav.has('t:'+m.h)||S.fav.has('t:'+m.a);
 const lrank=c=>S.fav.has('l:'+c)?-1:(i=>i<0?99:i)(PRI.indexOf(ln(c)));
-const power=m=>(num(m.r['Metis Index Casa'])||0)+(num(m.r['Metis Index Trasf'])||0);
+const power=m=>(num((MI.get(m.h)||{})['Metis Index'])||0)+(num((MI.get(m.a)||{})['Metis Index'])||0);
 const STAR='<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3"/>';
 const star=k=>{const on=S.fav.has(k);return `<button class="star${on?' on':''}${on&&S.pop===k?' pop':''}" data-act="fav" data-k="${esc(k)}" aria-pressed="${on}" aria-label="Segui"><svg viewBox="0 0 24 24">${STAR}</svg></button>`};
-const bd=n=>{const w=String(n).split(/\s+/);return `<span class="bd">${esc((w.length>1?w[0][0]+w[1][0]:String(n).slice(0,3)).toUpperCase())}</span>`};
+const ini=n=>{const w=String(n||'').split(/\s+/);return(w.length>1?w[0][0]+w[1][0]:String(n||'').slice(0,3)).toUpperCase()};
+const bd=n=>`<span class="bd" data-act="team" data-name="${esc(n)}">${esc(ini(n))}</span>`;
 const q=k=>`<button class="q" data-act="tip" data-k="${k}" aria-label="Spiegazione">?</button>`;
-const dfmt=d=>new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
-const addDay=(d,n)=>{const t=new Date(d+'T12:00:00');t.setDate(t.getDate()+n);return t.toISOString().slice(0,10)};
+const dfmt=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}catch{return d}};
+const addDay=(d,n)=>{try{const t=new Date(d+'T12:00:00');t.setDate(t.getDate()+n);return t.toISOString().slice(0,10)}catch{return d}};
 const empty=(t,b)=>`<div class="empty"><svg viewBox="0 0 100 130"><use href="#owl"/></svg><div>${t}</div>${b||''}</div>`;
+const todayStr=()=>new Date().toISOString().slice(0,10);
 
 function card(m,L=true){
  const p=probs(m),f=fav(m),tf=S.fav.has('t:'+m.h)||S.fav.has('t:'+m.a);
  return `<article class="mc" data-act="open" data-i="${m.i}"><div class="mh"><span>${L?esc(ln(m.c)):''}${tf?'<em>Squadra seguita</em>':''}</span>${m.t?`<span style="color:var(--vd);font-weight:800">${esc(m.t)}</span>`:''}</div>
- <div class="mt"><div class="tm">${bd(m.h)}<b class="${f=='h'?'w':''}">${esc(m.h)}</b></div><div class="vs">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="tm r"><b class="${f=='a'?'w':''}">${esc(m.a)}</b>${bd(m.a)}</div></div>
- ${p?`<div class="pb"><i style="width:${p[0]}%" class="${f=='h'?'w':''}"></i><i style="width:${p[1]}%" class="${f=='a'?'w':''}"></i></div>`:''}
- <div class="mf" style="display:flex;justify-content:space-between;align-items:center"><span>${f?`Favorita: <span class="w">${esc(f=='h'?m.h:m.a)}</span>`:'Match equilibrato'}</span>${star('m:'+m.id)}</div></article>`}
+ <div class="mt"><div class="tm" data-act="team" data-name="${esc(m.h)}">${bd(m.h)}<b class="${f=='h'?'w':''}">${esc(m.h)}</b></div><div class="vs">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="tm r" data-act="team" data-name="${esc(m.a)}"><b class="${f=='a'?'w':''}">${esc(m.a)}</b>${bd(m.a)}</div></div>
+ ${p?`<div class="pb"><i style="width:${p[0]}\%" class="${f=='h'?'w':''}"></i><i style="width:${p[1]}\%" class="${f=='a'?'w':''}"></i></div>`:''}
+ <div class="mf"><span>${f?`Favorita: <span class="w">${esc(f=='h'?m.h:m.a)}</span>`:'Match equilibrato'}</span>${star('m:'+m.id)}</div></article>`;
+}
 function groups(ms){const g={};ms.forEach(m=>(g[m.c]??=[]).push(m));return Object.keys(g).sort((a,b)=>lrank(a)-lrank(b)||ln(a).localeCompare(ln(b))).map(c=>[c,g[c].sort((a,b)=>power(b)-power(a))])}
-function dateBar(){const n=M.filter(m=>m.d===S.date).length;return `<div class="db"><button data-act="date" data-d="-1" aria-label="Giorno precedente">‹</button><label>${dfmt(S.date)}<input id="dp" type="date" value="${S.date}"></label><button data-act="date" data-d="1" aria-label="Giorno successivo">›</button></div><div class="sh" style="margin-top:14px">${n} partite<small>${n?'ordinate per campionato':''}</small></div>`}
+function dateBar(){const n=M.filter(m=>m.d===S.date).length;return `<div class="db"><button data-act="date" data-d="-1" aria-label="Giorno precedente">‹</button><label>${dfmt(S.date)}<input id="dp" type="date" value="${S.date}"></label><button data-act="date" data-d="1" aria-label="Giorno successivo">›</button></div><div class="sh">${n} partite<small>${n?'ordinate per campionato':''}</small></div>`}
 function lists(ms){
  if(!ms.length)return empty('Nessuna partita in questa data.<br>Prova un altro giorno.');
  const top=ms.filter(hi).sort((a,b)=>power(b)-power(a)),rest=ms.filter(m=>!hi(m));
- return (top.length?`<h2 class="sh">In evidenza<small>${top.length}</small></h2>`+top.map(m=>card(m)).join(''):`<div class="empty" style="padding:16px;margin-bottom:6px">Tocca la stella su una squadra, un campionato o una partita: la troverai qui in cima.</div>`)
- +groups(rest).map(([c,l])=>`<h2 class="sh lg">${esc(ln(c))}${star('l:'+c)}<small>${l.length}</small></h2>`+l.map(m=>card(m,false)).join('')).join('')}
-
+ return (top.length?`<h2 class="sh">In evidenza<small>${top.length}</small></h2>`+top.map(m=>card(m)).join(''):`<div class="empty" style="padding:16px">Tocca la stella su una squadra, un campionato o una partita.</div>`)
+ +groups(rest).map(([c,l])=>`<h2 class="sh lg" data-act="lg" data-c="${esc(c)}" style="cursor:pointer">${esc(ln(c))}${star('l:'+c)}<small>${l.length}</small></h2>`+l.map(m=>card(m,false)).join('')).join('');
+}
 function vHome(){
  if(S.q.trim())return vSearch();
- const ms=M.filter(m=>m.d===S.date),top=ms.filter(hi),big=ms.filter(m=>!hi(m)&&PRI.includes(ln(m.c))).sort((a,b)=>lrank(a.c)-lrank(b.c)||power(b)-power(a)).slice(0,10);
- const show=[...top,...big];
- return `<h2 class="sh" style="margin-top:18px">Partite del giorno<small style="text-transform:capitalize">${dfmt(S.date)}</small></h2>`+(show.length?show.map(m=>card(m)).join(''):empty('Nessuna partita per oggi.'))+(ms.length>show.length?`<button class="btn" data-act="tab" data-t="games">Tutte le partite (${ms.length})</button>`:'');
+ const ms=M.filter(m=>m.d===S.date),top=ms.filter(hi),big=ms.filter(m=>!hi(m)&&PRI.includes(ln(m.c))).sort((a,b)=>lrank(a.c)-lrank(b.c)||power(b)-power(a)).slice(0,10),show=[...top,...big];
+ return `<h2 class="sh">Partite del giorno<small style="text-transform:capitalize">${dfmt(S.date)}</small></h2>`+(show.length?show.map(m=>card(m)).join(''):empty('Nessuna partita per questa data.'))+(ms.length>show.length?`<button class="btn" data-act="tab" data-t="games">Tutte le partite (${ms.length})</button>`:'');
 }
+const trow=t=>`<div class="row" data-act="team" data-name="${esc(t)}">${bd(t)}<div class="n"><b>${esc(t)}</b><small>Metis Index: ${(MI.get(t)||{})['Metis Index']??'–'}</small></div>${star('t:'+t)}</div>`;
+const lrow=c=>`<div class="row" data-act="lg" data-c="${esc(c)}"><span class="bd">🏆</span><div class="n"><b>${esc(ln(c))}</b><small>${M.filter(m=>m.c===c).length} partite in programma</small></div>${star('l:'+c)}</div>`;
+
 function vSearch(){
  const k=nm(S.q.trim()),seg=`<div class="seg">${[['t','Squadre'],['l','Campionati'],['m','Partite']].map(([a,b])=>`<button class="${S.sq==a?'on':''}" data-act="seg" data-w="sq" data-v="${a}">${b}</button>`).join('')}</div>`;
  let h='';
- if(S.sq=='t'){const seen=new Set(),r=[];CLT.forEach(x=>{const n=nm(x.Squadra);if(n.includes(k)&&!seen.has(x.Squadra)){seen.add(x.Squadra);r.push(x)}});
-  h=r.slice(0,40).map(x=>`<div class="row">${bd(x.Squadra)}<div class="n"><b>${esc(x.Squadra)}</b><small>${esc(ln(x.Campionato))}</small></div>${star('t:'+x.Squadra)}</div>`).join('')}
+ if(S.sq=='t')h=[...MI.keys()].filter(t=>nm(t).includes(k)).slice(0,40).map(trow).join('');
  else if(S.sq=='l')h=LG.filter(c=>nm(ln(c)).includes(k)).map(lrow).join('');
  else h=M.filter(m=>nm(m.h+' '+m.a+' '+ln(m.c)).includes(k)).slice(0,30).map(m=>card(m)).join('');
  return seg+(h||empty('Nessun risultato.'));
 }
-const lrow=c=>`<div class="row cl" data-act="lg" data-c="${esc(c)}"><span class="bd">🏆</span><div class="n"><b>${esc(ln(c))}</b><small>${M.filter(m=>m.c===c).length} partite in programma</small></div>${star('l:'+c)}</div>`;
 function vFav(){
- const seg=`<div class="seg">${[['t','Squadre'],['l','Campionati'],['m','Fissate']].map(([a,b])=>`<button class="${S.ft==a?'on':''}" data-act="seg" data-w="ft" data-v="${a}">${b}</button>`).join('')}</div>`;
- const ks=[...S.fav].filter(x=>x[0]==S.ft).map(x=>x.slice(2));let h;
- if(S.ft=='t')h=ks.map(t=>{const st=[...CLT.values()].find(x=>x.Squadra==t),mi=MI.get(t);return `<div class="row">${bd(t)}<div class="n"><b>${esc(t)}</b><small>${st?esc(ln(st.Campionato)):''}</small></div>${mi?`<span class="mi">${mi['Metis Index']}</span>`:''}${star('t:'+t)}</div>`}).join('');
- else if(S.ft=='l')h=ks.map(lrow).join('');
- else h=M.filter(m=>ks.includes(m.id)).map(m=>card(m)).join('');
- return seg+(h||empty('Ancora nulla qui.<br>Cerca una squadra o un campionato e tocca la stella.',`<button data-act="tab" data-t="home">Vai alla ricerca</button>`));
+ const seg=`<div class="seg">${[['t','Squadre'],['l','Campionati'],['m','Partite']].map(([a,b])=>`<button class="${S.ft==a?'on':''}" data-act="seg" data-w="ft" data-v="${a}">${b}</button>`).join('')}</div>`;
+ const ks=[...S.fav].filter(x=>x.startsWith(S.ft+':')).map(x=>x.slice(2));let h;
+ if(S.ft=='t')h=ks.map(trow).join('');else if(S.ft=='l')h=ks.map(lrow).join('');else h=M.filter(m=>ks.includes(m.id)).map(m=>card(m)).join('');
+ return seg+(h||empty('Ancora nulla qui.',`<button class="btn" data-act="tab" data-t="home">Vai alla ricerca</button>`));
 }
-function vLeagues(){const k=nm(S.q.trim());const l=LG.filter(c=>nm(ln(c)).includes(k)).sort((a,b)=>lrank(a)-lrank(b)||ln(a).localeCompare(ln(b)));return `<h2 class="sh" style="margin-top:18px">Campionati<small>${l.length}</small></h2>`+(l.map(lrow).join('')||empty('Nessun campionato trovato.'))}
+function vLeagues(){const k=nm(S.q.trim()),l=LG.filter(c=>nm(ln(c)).includes(k)).sort((a,b)=>lrank(a)-lrank(b)||ln(a).localeCompare(ln(b)));return `<h2 class="sh">Campionati<small>${l.length}</small></h2>`+(l.map(lrow).join('')||empty('Nessun campionato trovato.'))}
 function vMore(){
  const th=['light','dark','auto'],tl={light:'Chiaro',dark:'Scuro',auto:'Auto'},W=[['Forma',20],['Attacco',15],['Difesa',15],['Creazione',15],['Performance',10],['Casa/Trasferta',10],['Trend',10],['Efficienza',5]];
- return `<h2 class="sh" style="margin-top:18px">Impostazioni</h2>
- <div class="card"><h3>Cos'è il Metis Index</h3><p>Un indice proprietario da 0 a 100 che combina 8 fattori statistici per misurare lo stato di forma di ogni squadra e stimare chi parte favorita. Le percentuali nelle partite derivano dal confronto tra i due indici.</p><div class="chips">${W.map(w=>`<span>${w[0]} ${w[1]}%</span>`).join('')}</div><button class="btn o" data-act="tip" data-k="index">Scopri di più</button></div>
+ return `<h2 class="sh">Impostazioni</h2>
+ <div class="card"><h3>Cos'è il Metis Index</h3><p>Un indice da 0 a 100 che combina 8 fattori statistici.</p><div class="chips">${W.map(w=>`<span>${w[0]}${w[1]}%</span>`).join('')}</div></div>
  <div class="card"><h3>Tema</h3><div class="seg" style="margin:0">${th.map(t=>`<button class="${S.theme==t?'on':''}" data-act="theme" data-v="${t}">${tl[t]}</button>`).join('')}</div></div>
- <div class="card"><h3>Dati</h3><p>Stagione ${esc(SEASON||'–')} · ${M.length} partite · ${CLT.size} squadre.<br>Aggiornati alle ${S.upd?S.upd.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'–'}. Il file si ricarica da solo ogni 5 minuti.</p><button class="btn" data-act="upd">Aggiorna ora</button><label class="btn o">Carica file Excel manualmente<input type="file" id="fi" accept=".xlsx" hidden></label></div>`}
+ <div class="card"><h3>Dati</h3><p>Stagione ${esc(SEASON||'–')} · ${M.length} partite.<br>Aggiornati alle ${S.upd?S.upd.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'–'}.</p><button class="btn" data-act="upd">Aggiorna ora</button><label class="btn o">Carica file Excel<input type="file" id="fi" accept=".xlsx" hidden></label></div>`;
+}
+const R=(l,v,w,k)=>`<div class="mk"><span>${l}${k?q(k):''}</span><span class="${w?'w':''}">${v===''||v==null||v==='undefined'?'–':esc(v)}</span></div>`;
 
-function vOv(){
- const o=S.ov;if(!o)return '';
- if(o.t=='l'){const c=o.c,ms=M.filter(m=>m.c===c),ds=[...new Set(ms.map(m=>m.d))].sort();
-  return `<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(c))}</h1>${star('l:'+c)}</div><div class="seg"><button class="${o.tab=='g'?'on':''}" data-act="ovt" data-v="g">Partite</button><button class="${o.tab=='c'?'on':''}" data-act="ovt" data-v="c">Classifica</button></div>`+
-  (o.tab=='g'?(ds.map(d=>`<div class="dh">${dfmt(d)}</div>`+ms.filter(m=>m.d==d).sort((a,b)=>power(b)-power(a)).map(m=>card(m,false)).join('')).join('')||empty('Nessuna partita in programma.'))
-  :`<div class="card"><table><tr><th>#</th><th style="text-align:left">Squadra</th><th>Pt</th><th>G</th><th>DR</th><th>Metis${q('index')}</th></tr>${(CL[c]||[]).map(r=>`<tr><td class="p">${r.Posizione}</td><td class="t">${esc(r.Squadra)}</td><td class="p">${r.Punti}</td><td>${r.Giocate}</td><td>${r['Diff Reti']}</td><td><span class="mi">${(MI.get(r.Squadra)||{})['Metis Index']??'–'}</span></td></tr>`).join('')}</table></div>`);}
- const m=M[o.i],p=probs(m),f=fav(m),r=m.r,A=MI.get(m.h)||{},B=MI.get(m.a)||{};
+function vTeam(tn){
+ const mi=MI.get(tn)||{},st=ST.get(tn)||{},cl=CLT.get(tn)||{},g=+cl.Giocate||0,r2=v=>g?(v/g).toFixed(2):'–';
+ const C=[['Forma (20%)','forma'],['Attacco (15%)','attacco'],['Difesa (15%)','difesa'],['Creazione (15%)','creazione'],['Performance (10%)','perf'],['Casa/Trasferta (10%)','ct'],['Efficienza (5%)','eff'],['Trend (10%)','trend']];
+ const nx=M.filter(m=>(m.h==tn||m.a==tn)&&m.d>=todayStr()).slice(0,5);
+ 
+ return `<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(tn)}</h1>${star('t:'+tn)}</div>
+ <div class="hero"><span class="bd" style="width:64px;height:64px;font-size:20px;margin:0 auto 10px">${esc(ini(tn))}</span><div class="big"><span class="w">${mi['Metis Index']??'–'}</span><i>/100</i>${q('index')}</div><p>${esc(ln(cl.Campionato||st.Campionato||''))}</p></div>
+ ${g?`<div class="card"><h3>Stagione ${esc(SEASON)}</h3>${R('Posizione in classifica',cl.Posizione?cl.Posizione+'°':'–',1,'pos')}${R('Punti',cl.Punti,1,'pt')}${R('Partite giocate',cl.Giocate)}${R('Punti a partita',r2(cl.Punti))}${R('Gol fatti',cl['Gol Fatti'],0,'gf')}${R('Gol subiti',cl['Gol Subiti'],0,'gs')}${R('Differenza reti',cl['Diff Reti'],0,'dr')}${R('Gol fatti a partita',r2(cl['Gol Fatti']))}${R('Gol subiti a partita',r2(cl['Gol Subiti']))}</div>`:`<div class="empty">Nessuna partita giocata in questa stagione: l'indice è una stima basata sullo storico.</div>`}
+ ${st.Squadra?`<div class="card"><h3>Casa e trasferta</h3>${R('Gol fatti in casa (media)',st['Media GF Casa'])}${R('Gol subiti in casa (media)',st['Media GS Casa'])}${R('Gol fatti fuori (media)',st['Media GF Fuori'])}${R('Gol subiti fuori (media)',st['Media GS Fuori'])}</div>
+ <div class="card"><h3>Mercati</h3>${R('% Over 2.5',st['% Over 2.5'],1,'over')}${R('\% Entrambe segnano',st['\% Gol/Gol'],1,'gg')}${R('% Porta inviolata',st['% Clean sheet'],1,'cs')}</div>`:''}
+ <div class="card"><h3>Componenti Metis Index${q('index')}</h3>${C.map(c=>R(c[0],mi[c[0]],0,c[1])).join('')}</div>
+ ${nx.length?`<h2 class="sh">Prossime partite<small>${nx.length}</small></h2>`+nx.map(m=>card(m)).join(''):''}`;
+}
+
+function vLeague(o){
+ const c=o.c,ms=M.filter(m=>m.c===c),ds=[...new Set(ms.map(m=>m.d))].sort();
+ return `<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(c))}</h1>${star('l:'+c)}</div><div class="seg"><button class="${o.tab=='g'?'on':''}" data-act="ovt" data-v="g">Partite</button><button class="${o.tab=='c'?'on':''}" data-act="ovt" data-v="c">Classifica</button></div>`+
+ (o.tab=='g'?(ds.map(d=>`<div class="dh">${dfmt(d)}</div>`+ms.filter(m=>m.d==d).sort((a,b)=>power(b)-power(a)).map(m=>card(m,false)).join('')).join('')||empty('Nessuna partita in programma.'))
+ :`<div class="card"><table><tr><th>#</th><th style="text-align:left">Squadra</th><th>Pt</th><th>G</th><th>DR</th><th>Metis</th></tr>${(CL[c]||[]).map(r=>`<tr data-act="team" data-name="${esc(r.Squadra)}"><td class="p">${r.Posizione}</td><td class="t">${esc(r.Squadra)}</td><td class="p">${r.Punti}</td><td>${r.Giocate}</td><td>${r['Diff Reti']}</td><td><span class="mi">${(MI.get(r.Squadra)||{})['Metis Index']??'–'}</span></td></tr>`).join('')}</table></div>`);
+}
+
+function vMatch(o){
+ const m=M[o.i];if(!m)return '';
+ const p=probs(m),f=fav(m),r=m.r||{};
  let b=`<div class="top"><button class="bk" data-act="close" aria-label="Indietro">‹</button><h1>${esc(ln(m.c))}<div style="font-size:11px;color:var(--mu);font-weight:600;text-transform:capitalize">${dfmt(m.d)}${m.t?', ore '+esc(m.t):''}</div></h1>${star('m:'+m.id)}</div>
- <div class="hero"><div class="ht"><div class="t">${bd(m.h)}<span class="${f=='h'?'w':''}">${esc(m.h)}</span>${star('t:'+m.h)}</div><div class="big">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="t">${bd(m.a)}<span class="${f=='a'?'w':''}">${esc(m.a)}</span>${star('t:'+m.a)}</div></div>
- <p style="color:var(--mu);font-size:12.5px">${f?`<b class="w">${esc(f=='h'?m.h:m.a)}</b> è favorita secondo il Metis Index`:'Per il Metis Index il match è equilibrato'}${q('index')}</p></div>
+ <div class="hero"><div class="ht"><div class="t" data-act="team" data-name="${esc(m.h)}">${bd(m.h)}<span class="${f=='h'?'w':''}">${esc(m.h)}</span>${star('t:'+m.h)}</div><div class="big">${p?`<span class="${f=='h'?'w':''}">${p[0]}</span><i>:</i><span class="${f=='a'?'w':''}">${p[1]}</span>`:'vs'}</div><div class="t" data-act="team" data-name="${esc(m.a)}">${bd(m.a)}<span class="${f=='a'?'w':''}">${esc(m.a)}</span>${star('t:'+m.a)}</div></div>
+ <p>${f?`<b class="w">${esc(f=='h'?m.h:m.a)}</b> è favorita secondo il Metis Index`:'Per il Metis Index il match è equilibrato'}${q('index')}</p></div>
  <div class="seg">${[['p','Panoramica'],['s','Statistiche'],['h','H2H']].map(([a,l])=>`<button class="${o.tab==a?'on':''}" data-act="ovt" data-v="${a}">${l}</button>`).join('')}</div>`;
  if(o.tab=='p'){
-  const mk=(l,k,v)=>{v=v||'–';const pos=/^(Over|S[ìi]|Vittoria|.*Probabile)/.test(v);return `<div class="mk"><span>${l}${q(k)}</span><span class="${pos?'w':''}">${esc(v)}</span></div>`};
+  const mk=(l,k,v)=>`<div class="mk"><span>${l}${q(k)}</span><span class="${/^(Over|S[ìi]|Vittoria)/.test(v||'')?'w':''}">${esc(v||'–')}</span></div>`;
   b+=`<div class="card"><h3>Mercati e previsioni</h3>${mk('Esito','esito',r['Esito / Chi Vince'])}${mk('Over/Under 1.5','ou',r['Over/Under 1.5'])}${mk('Over/Under 2.5','ou',r['Over/Under 2.5'])}${mk('Over/Under 3.5','ou',r['Over/Under 3.5'])}${mk('Over/Under 4.5','ou',r['Over/Under 4.5'])}${mk('Entrambe segnano','btts',r['Entrambe Segnano (BTTS)'])}${mk('Porta inviolata','csm',r['Clean Sheet (Porta Inviolata)'])}</div>`;
  }else if(o.tab=='s'){
-  const sa=ST.get(m.h+'|'+m.c)||{},sb=ST.get(m.a+'|'+m.c)||{},ca=CLT.get(m.h+'|'+m.c)||{},cb=CLT.get(m.a+'|'+m.c)||{};
-  const sr=(l,k,x,y,lo)=>{const a=num(x),c=num(y);if(a==null||c==null)return '';const w=a==c?0:((a>c)!==!!lo?1:2),mn=Math.min(a,c,0),X=a-mn,Y=c-mn,sh=X+Y==0?50:Math.round(100*(lo?Y:X)/(X+Y));return `<div class="sr"><div class="v ${w==1?'w':''}">${esc(x)}</div><div class="l">${l}${q(k)}</div><div class="v r ${w==2?'w':''}">${esc(y)}</div><div class="bar"><i class="${w==1?'w':''}" style="width:${sh}%"></i><i class="${w==2?'w':''}" style="width:${100-sh}%"></i></div></div>`};
+  const sa=ST.get(m.h)||{},sb=ST.get(m.a)||{},ca=CLT.get(m.h)||{},cb=CLT.get(m.a)||{},A=MI.get(m.h)||{},B=MI.get(m.a)||{};
+  const sr=(l,k,x,y,lo)=>{const a=num(x),c=num(y);if(a==null||c==null)return '';const w=a==c?0:((a>c)!==!!lo?1:2),mn=Math.min(a,c,0),X=a-mn,Y=c-mn,s=X+Y==0?50:Math.round(100*(lo?Y:X)/(X+Y));return `<div class="sr"><div class="v ${w==1?'w':''}">${esc(x)}</div><div class="l">${l}${q(k)}</div><div class="v r ${w==2?'w':''}">${esc(y)}</div><div class="bar"><i class="${w==1?'w':''}" style="width:${s}%"></i><i class="${w==2?'w':''}" style="width:${100-s}%"></i></div></div>`};
   const gh=`<div class="gh"><span>${esc(m.h)}</span><span>${esc(m.a)}</span></div>`;
   const C=[['Forma','forma','Forma (20%)'],['Attacco','attacco','Attacco (15%)'],['Difesa','difesa','Difesa (15%)'],['Creazione','creazione','Creazione (15%)'],['Performance','perf','Performance (10%)'],['Casa/Trasferta','ct','Casa/Trasferta (10%)'],['Efficienza','eff','Efficienza (5%)'],['Trend','trend','Trend (10%)']];
   b+=`<div class="card"><h3>Metis Index</h3>${gh}${sr('Metis Index','index',A['Metis Index'],B['Metis Index'])}${C.map(c=>sr(c[0],c[1],A[c[2]],B[c[2]])).join('')}</div>
-  <div class="card"><h3>Stagione ${esc(SEASON)}</h3>${gh}${sr('Posizione','pos',ca.Posizione,cb.Posizione,1)}${sr('Punti','pt',ca.Punti,cb.Punti)}${sr('Gol fatti','gf',ca['Gol Fatti'],cb['Gol Fatti'])}${sr('Gol subiti','gs',ca['Gol Subiti'],cb['Gol Subiti'],1)}${sr('Diff. reti','dr',ca['Diff Reti'],cb['Diff Reti'])}${sr('Gol fatti casa/fuori','gfc',sa['Media GF Casa'],sb['Media GF Fuori'])}${sr('Gol subiti casa/fuori','gsc',sa['Media GS Casa'],sb['Media GS Fuori'],1)}${sr('% Over 2.5','over',sa['% Over 2.5'],sb['% Over 2.5'])}${sr('% Gol/Gol','gg',sa['% Gol/Gol'],sb['% Gol/Gol'])}${sr('% Clean sheet','cs',sa['% Clean Sheet'],sb['% Clean Sheet'])}</div>`;
+  <div class="card"><h3>Stagione ${esc(SEASON)}</h3>${gh}${sr('Posizione','pos',ca.Posizione,cb.Posizione,1)}${sr('Punti','pt',ca.Punti,cb.Punti)}${sr('Gol fatti','gf',ca['Gol Fatti'],cb['Gol Fatti'])}${sr('Gol subiti','gs',ca['Gol Subiti'],cb['Gol Subiti'],1)}${sr('Diff. reti','dr',ca['Diff Reti'],cb['Diff Reti'])}${sr('Gol fatti casa/fuori','gfc',sa['Media GF Casa'],sb['Media GF Fuori'])}${sr('Gol subiti casa/fuori','gsc',sa['Media GS Casa'],sb['Media GS Fuori'],1)}${sr('% Over 2.5','over',sa['% Over 2.5'],sb['% Over 2.5'])}${sr('% Gol/Gol','gg',sa['% Gol/Gol'],sb['% Gol/Gol'])}${sr('% Clean sheet','cs',sa['% Clean sheet'],sb['% Clean sheet'])}</div>`;
  }else{
-  let x=H2.get(m.h+' vs '+m.a),y;if(x)y={n:x['Match Totali'],a:x['Vittorie A'],d:x.Pareggi,b:x['Vittorie B'],g:x['Media Gol Totali']};else if(x=H2.get(m.a+' vs '+m.h))y={n:x['Match Totali'],a:x['Vittorie B'],d:x.Pareggi,b:x['Vittorie A'],g:x['Media Gol Totali']};
-  b+=y?`<div class="card"><h3>Scontri diretti${q('h2h')}</h3><div class="gh"><span class="${y.a>y.b?'w':''}">${esc(m.h)} ${y.a}</span><span>Pari ${y.d}</span><span class="${y.b>y.a?'w':''}">${y.b} ${esc(m.a)}</span></div><div class="bar" style="height:8px"><i class="${y.a>y.b?'w':''}" style="flex:${y.a||.1}"></i><i style="flex:${y.d||.1};opacity:.25"></i><i class="${y.b>y.a?'w':''}" style="flex:${y.b||.1}"></i></div>
-  <div class="mk" style="margin-top:8px"><span>Precedenti totali</span><span>${y.n}</span></div><div class="mk"><span>Media gol${q('avg')}</span><span>${esc(y.g)}</span></div></div>`:empty('Nessun precedente nei dati disponibili.');
+  let x=H2.get(m.h+' vs '+m.a),y=null;
+  if(x)y={n:x['Match Totali'],a:x['Vittorie A'],d:x.Pareggi,b:x['Vittorie B'],g:x['Media Gol Totali']};
+  else if(x=H2.get(m.a+' vs '+m.h))y={n:x['Match Totali'],a:x['Vittorie B'],d:x.Pareggi,b:x['Vittorie A'],g:x['Media Gol Totali']};
+  b+=y?`<div class="card"><h3>Scontri diretti${q('h2h')}</h3><div class="gh"><span class="${y.a>y.b?'w':''}">${esc(m.h)} ${y.a}</span><span>Pari ${y.d}</span><span class="${y.b>y.a?'w':''}">${y.b} ${esc(m.a)}</span></div><div class="bar cmp"><i class="${y.a>y.b?'w':''}" style="flex:${y.a||.1}"></i><i style="flex:${y.d||.1};opacity:.25"></i><i class="${y.b>y.a?'w':''}" style="flex:${y.b||.1}"></i></div>
+  <div class="mk" style="margin-top:8px"><span>Precedenti totali</span><span>${esc(y.n)}</span></div><div class="mk"><span>Media gol${q('avg')}</span><span>${esc(y.g)}</span></div></div>`:empty('Nessun precedente nei dati disponibili.');
  }
  return b;
 }
+const vOv=()=>{const o=S.ov;return !o?'':o.t=='team'?vTeam(o.name):o.t=='l'?vLeague(o):vMatch(o)};
+
 function render(){
  $('#nav').innerHTML=TABS.map(([k,l])=>`<button class="${S.tab==k?'on':''}" data-act="tab" data-t="${k}"><svg viewBox="0 0 24 24">${IC[k]}</svg>${l}</button>`).join('');
  $('#sb').style.display=(S.tab=='home'||S.tab=='leagues')?'':'none';
  $('#q').placeholder=S.tab=='home'?'Cerca squadra, campionato o partita…':'Cerca un campionato…';
  let v;
- if(S.err)v=empty('Non riesco a leggere <b>metis_database.xlsx</b>.<br>Mettilo nella stessa cartella di questa pagina (e apri la pagina da un server), oppure caricalo a mano.','<label class="btn">Carica il file Excel<input type="file" id="fi" accept=".xlsx" hidden></label>');
- else if(!M.length)v=empty('Carico i dati…');
+ if(S.err)v=empty('Non riesco a leggere <b>metis_database.xlsx</b>.','<label class="btn">Carica il file Excel<input type="file" id="fi" accept=".xlsx" hidden></label>');
+ else if(!M.length && !MI.size)v=empty('Carico i dati…');
  else v=S.tab=='home'?vHome():S.tab=='fav'?vFav():S.tab=='games'?dateBar()+lists(M.filter(m=>m.d===S.date)):S.tab=='leagues'?vLeagues():vMore();
  $('#view').innerHTML=v;
- const o=$('#ov'),st=o.scrollTop;o.classList.toggle('show',!!S.ov);if(S.ov){$('#ovc').innerHTML=vOv();o.scrollTop=st}
+ const o=$('#ov'),st=o.scrollTop;o.classList.toggle('show',!!S.ov);
+ if(S.ov){$('#ovc').innerHTML=vOv();o.scrollTop=st}
  document.body.style.overflow=S.ov?'hidden':'';S.pop=null;
 }
 function anim(){const o=$('#ov');o.classList.remove('anim');void o.offsetWidth;o.classList.add('anim');o.scrollTop=0}
+function go(o){if(S.ov)S.hist.push(S.ov);S.ov=o;render();anim()}
 function applyTheme(){const d=S.theme=='dark'||(S.theme=='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.t=d?'d':'l'}
+
 document.addEventListener('click',e=>{
- const b=e.target.closest('[data-act]');if(!b)return;const d=b.dataset;
+ const t=e.target.closest('[data-act]');if(!t)return;
+ const d=t.dataset;
  switch(d.act){
-  case 'fav':{const k=d.k;S.fav.has(k)?S.fav.delete(k):(S.fav.add(k),S.pop=k);lss('metis.fav',JSON.stringify([...S.fav]));break}
-  case 'open':S.ov={t:'m',i:+d.i,tab:'p'};render();anim();return;
-  case 'lg':S.ov={t:'l',c:d.c,tab:'g'};render();anim();return;
-  case 'close':S.ov=null;break;
+  case 'fav':{const k=d.k;if(S.fav.has(k))S.fav.delete(k);else{S.fav.add(k);S.pop=k}lss('metis.fav',JSON.stringify([...S.fav]));break}
+  case 'open':return go({t:'m',i:+d.i,tab:'p'});
+  case 'lg':return go({t:'l',c:d.c,tab:'g'});
+  case 'team':return go({t:'team',name:d.name});
+  case 'close':S.ov=S.hist.pop()||null;break;
   case 'ovt':S.ov.tab=d.v;break;
-  case 'tab':S.tab=d.t;S.ov=null;S.q='';$('#q').value='';scrollTo(0,0);break;
+  case 'tab':S.tab=d.t;S.ov=null;S.hist=[];S.q='';$('#q').value='';scrollTo(0,0);break;
   case 'seg':S[d.w]=d.v;break;
   case 'date':S.date=addDay(S.date,+d.d);break;
   case 'theme':S.theme=d.v;lss('metis.theme',d.v);applyTheme();break;
   case 'upd':load();return;
-  case 'tip':{const t=TIP[d.k];$('#tt').textContent=t[0];$('#td').textContent=t[1]+(d.k=='index'?' Il modello ricalcola l\'indice ogni volta che il file dati viene aggiornato.':'');$('#tip').classList.add('show');return}
+  case 'tip':{const x=TIP[d.k]||['Informazione','Dettaglio non disponibile.'];$('#tt').textContent=x[0];$('#td').textContent=x[1];$('#tip').classList.add('show');return}
   case 'tipx':$('#tip').classList.remove('show');return;
  }
  render();

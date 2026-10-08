@@ -166,3 +166,33 @@ async function startLiveDaemon() {
 
 // Avvio automatico del demone
 startLiveDaemon();
+
+// ============================================================================
+// 📌 METIS ENGINE — NOTE & COMANDI UTILI (PROMEMORIA RAPIDO)
+// ============================================================================
+//
+// 🚀 GESTIONE PROCESSI IN BACKGROUND (PM2):
+//   • Avviare il collector live: 
+//     pm2 start scripts/live-match-details-collector.js
+//
+//   • Controllare lo stato dei processi attivi: 
+//     pm2 status
+//
+//   • Visualizzare i log in tempo reale (per vedere cosa sta scaricando): 
+//     pm2 logs live-match-details-collector
+//
+//   • Fermare il processo in background: 
+//     pm2 stop live-match-details-collector
+//
+//   • Riavviare il processo: 
+//     pm2 restart live-match-details-collector
+//
+//   • Eliminare completamente il processo dalla lista di PM2: 
+//     pm2 delete live-match-details-collector
+//
+// ----------------------------------------------------------------------------
+// 🛠️ COMANDI NPM DI BASE:
+//   • Avviare il server backend principale: 
+//     npm start (o npm run dev)
+//
+// ============================================================================
